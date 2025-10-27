@@ -4,7 +4,7 @@ import React from 'react';
 export const NewsletterFormContent = styled(Card.Body, {
   display: 'flex',
   flexDirection: 'column',
-  alignItems: 'start',
+  alignItems: 'center',
   gap: 'var(--space-2)',
   variants: {
     withOffset: {

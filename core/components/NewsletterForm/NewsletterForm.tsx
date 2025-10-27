@@ -142,7 +142,7 @@ const NewsletterForm = (props: Props) => {
         ) : null}
         <Box
           as="form"
-          css={{ width: '100%' }}
+          css={{ width: '100%', maxWidth: '400px' }}
           onSubmit={async (event) => {
             event.preventDefault();
             try {
@@ -150,46 +150,47 @@ const NewsletterForm = (props: Props) => {
             } catch (e) {}
           }}
         >
-          <Flex
-            alignItems="stretch"
-            gap="2"
-            css={{
-              flexDirection: 'row',
-              width: '100%',
-              '@media (max-width: 500px)': {
-                flexDirection: 'column',
-              },
-            }}
-          >
-            <Box css={{ flex: 1, minWidth: 0 }}>
-              <TextInput
-                aria-label="Email"
-                id="email-input"
-                type="email"
-                placeholder="your@email.com"
-                autoComplete="off"
-                value={email}
-                onChange={(event) => setEmail(event.currentTarget.value)}
-                required
-              />
+          <Box css={{ position: 'relative', width: '100%' }}>
+            <TextInput
+              aria-label="Email"
+              id="email-input"
+              type="email"
+              placeholder="your@email.com"
+              autoComplete="off"
+              value={email}
+              onChange={(event) => setEmail(event.currentTarget.value)}
+              required
+            />
+            <Box
+              css={{
+                position: 'absolute',
+                right: '4px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+              }}
+            >
+              <Glow>
+                <Button
+                  aria-label="Subscribe to my newsletter"
+                  disabled={isLoading || isSuccess}
+                  title="Subscribe to my newsletter"
+                  type="submit"
+                  variant="primary"
+                  css={{
+                    minWidth: '34px',
+                    height: '34px',
+                    padding: '0',
+                    fontSize: '16px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  {isLoading ? '...' : isSuccess ? '✓' : '>'}
+                </Button>
+              </Glow>
             </Box>
-            <Glow>
-              <Button
-                aria-label="Subscribe to my newsletter"
-                disabled={isLoading || isSuccess}
-                title="Subscribe to my newsletter"
-                type="submit"
-                variant="primary"
-                css={{
-                  minWidth: '44px',
-                  fontSize: '20px',
-                  flexShrink: 0,
-                }}
-              >
-                {isLoading ? '...' : isSuccess ? '✓' : '>'}
-              </Button>
-            </Glow>
-          </Flex>
+          </Box>
         </Box>
         {error ? (
           error.message.includes('already subscribed') ? (
