@@ -214,7 +214,7 @@ const Footer = (props: { lastUpdated?: string }) => {
                 </Text>
                 <Anchor
                   discreet
-                  href={`https://github.com/maximeheckel/blog.maximeheckel.com/commit/${commitSha}`}
+                  href={`https://github.com/Valcoholics/blog/commit/${commitSha}`}
                   external
                 >
                   <ScrambledText
@@ -276,7 +276,7 @@ const Footer = (props: { lastUpdated?: string }) => {
                 <Anchor
                   discreet
                   external
-                  href="https://github.com/maximeheckel/blog.maximeheckel.com"
+                  href="https://github.com/Valcoholics/blog"
                 >
                   <ScrambledText
                     disabled={!isInView}
@@ -324,14 +324,21 @@ const Footer = (props: { lastUpdated?: string }) => {
                     <Link href="/" legacyBehavior passHref>
                       <Anchor discreet>Home</Anchor>
                     </Link>
-                    <Anchor discreet href="https://maximeheckel.com">
-                      Work
+                    <Anchor
+                      discreet
+                      href="https://github.com/Valcoholics"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      GitHub
                     </Anchor>
                     <Anchor
                       discreet
-                      href="https://www.buymeacoffee.com/maximeheckel"
+                      href="https://substack.com/@dataval"
+                      target="_blank"
+                      rel="noopener noreferrer"
                     >
-                      Support me!
+                      Substack
                     </Anchor>
                   </Grid>
                 </Text>
@@ -341,19 +348,11 @@ const Footer = (props: { lastUpdated?: string }) => {
                   <Grid>
                     <Anchor
                       discreet
-                      href="https://bsky.app/profile/maxime.bsky.social"
+                      href="https://www.instagram.com/data____v/"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      Bluesky
-                    </Anchor>
-                    <Anchor
-                      discreet
-                      href="https://twitter.com/MaximeHeckel"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Twitter
+                      Instagram
                     </Anchor>
                     <Link href="/rss.xml" legacyBehavior passHref>
                       <Anchor discreet>RSS</Anchor>
@@ -383,7 +382,7 @@ const Footer = (props: { lastUpdated?: string }) => {
             css={{ gap: 'var(--space-4) !important' }}
             col={2}
           >
-            <Logo alt="Maxime Heckel's logo" size={40} />
+            <Logo alt="Valerie Andy's logo" size={40} />
             <Box>
               <Text
                 as="p"
@@ -396,8 +395,8 @@ const Footer = (props: { lastUpdated?: string }) => {
                 variant="primary"
                 weight="3"
               >
-                © {new Date().getFullYear()} Maxime Heckel{' '}
-                <EM size="1">Design & Built in NYC</EM>
+                © {new Date().getFullYear()} Valerie Andy{' '}
+                <EM size="1">Computational Designer</EM>
               </Text>
             </Box>
           </Flex>

@@ -40,12 +40,12 @@ const __dirname = path.dirname(__filename);
 
   try {
     const feed = new RSS({
-      title: "Maxime Heckel's Blog",
+      title: "Valerie Andy's Blog",
       description:
-        "Hi I'm Maxime, and this is my blog. Here, I share through my writing my experience as a frontend engineer and everything I'm learning about on React, Typescript, SwiftUI, Serverless, and testing.",
-      site_url: 'https://blog.maximeheckel.com',
-      feed_url: 'https://blog.maximeheckel.com/rss.xml',
-      image_url: 'https://blog.maximeheckel.com/static/og/main-og-image.png',
+        "Hi I'm Valerie Andy, and this is my blog. Home to my audio visualizer series exploring sonic identity through creative code, released every Wednesday. As a computational designer, I dive deep into the intersection of sound, code, and visual expression.",
+      site_url: 'http://localhost:3000',
+      feed_url: 'http://localhost:3000/rss.xml',
+      image_url: 'http://localhost:3000/static/og/main-og-image.png',
       language: 'en',
     });
 
@@ -54,13 +54,13 @@ const __dirname = path.dirname(__filename);
     );
 
     content.forEach((post) => {
-      const url = `https://blog.maximeheckel.com/posts/${post.slug}`;
+      const url = `http://localhost:3000/posts/${post.slug}`;
 
       feed.item({
         title: post.title,
         description: post.subtitle,
         date: new Date(post.date),
-        author: 'Maxime heckel',
+        author: 'Valerie Andy',
         url,
         guid: url,
       });

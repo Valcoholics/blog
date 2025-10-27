@@ -55,7 +55,7 @@ const IndexSection = () => {
             variant="primary"
             weight="3"
           >
-            Exploring the depths of the{' '}
+            Exploring{' '}
             <Text
               as="span"
               css={{
@@ -67,9 +67,9 @@ const IndexSection = () => {
               }}
               variant="primary"
             >
-              web
-            </Text>
-            .
+              sonic identity
+            </Text>{' '}
+            through creative code.
           </Text>
         </Box>
       </Grid.Item>
@@ -86,16 +86,16 @@ const IndexSection = () => {
             size="4"
             weight="3"
           >
-            Hi I&apos;m Maxime, and this is my blog. In here, you&apos;ll find
-            all the articles I wished I had when I was learning about web
-            development, shaders, real-time 3D on the web, and more.
+            Hi I&apos;m Valerie Andy, and this is my blog. Home to my audio
+            visualizer series exploring sonic identity through creative code,
+            released every Wednesday.
             <br />
             <br />
-            Each piece I write aims to dive deep into the topics I&apos;m
-            passionate about, while also making complex topics more accessible
-            through interactive playgrounds, visualization, and well detailed
-            walkthroughs. My goal is to give you the tools and intuition to
-            explore further on your own.
+            As a computational designer, I dive deep into the intersection of
+            sound, code, and visual expression, creating interactive experiences
+            that bring audio to life. Each piece aims to make complex topics
+            accessible through interactive demonstrations and detailed
+            walkthroughs.
           </Text>
         </Flex>
       </Grid.Item>

@@ -617,17 +617,17 @@ export default function Design(props: { tweets: Record<string, NewTweet> }) {
             <H2>Anchor</H2>
             <Grid gap={1}>
               <p>
-                <Anchor href="https://twitter.com/MaximeHeckel" favicon>
-                  @MaximeHeckel
+                <Anchor href="https://www.instagram.com/data____v/" favicon>
+                  @data____v
                 </Anchor>
               </p>
               <p>
                 <Anchor
-                  href="https://twitter.com/MaximeHeckel"
+                  href="https://www.instagram.com/data____v/"
                   discreet
                   favicon
                 >
-                  @MaximeHeckel
+                  @data____v
                 </Anchor>
               </p>
               <p>
@@ -636,13 +636,13 @@ export default function Design(props: { tweets: Record<string, NewTweet> }) {
                 </Anchor>
               </p>
               <p>
-                <Anchor href="https://twitter.com/MaximeHeckel" arrow="right">
-                  Twitter
+                <Anchor href="https://www.instagram.com/data____v/" arrow="right">
+                  Instagram
                 </Anchor>
               </p>
               <p>
                 <Anchor
-                  href="https://github.com/MaximeHeckel/blog.maximeheckel.com"
+                  href="https://github.com/Valcoholics/blog"
                   arrow="right"
                   discreet
                 >
@@ -675,7 +675,7 @@ export default function Design(props: { tweets: Record<string, NewTweet> }) {
                 aria-label="Email"
                 id="email-input"
                 type="email"
-                placeholder="hello@maximeheckel.com"
+                placeholder="contact@example.com"
                 onChange={(event) => setEmail(event.currentTarget.value)}
                 value={email}
               />
@@ -704,14 +704,14 @@ export default function Design(props: { tweets: Record<string, NewTweet> }) {
                 placeholder="Name"
                 disabled
                 onChange={() => {}}
-                value="Maxime Heckel"
+                value="Valerie Andy"
               />
 
               <TextInput
                 aria-label="Email"
                 id="email-input"
                 type="email"
-                placeholder="hello@maximeheckel.com"
+                placeholder="contact@example.com"
                 onChange={(event) => setEmail(event.currentTarget.value)}
                 value={email}
                 autoComplete="off"
@@ -722,9 +722,9 @@ export default function Design(props: { tweets: Record<string, NewTweet> }) {
                 id="email-input-disabled"
                 type="email"
                 disabled
-                placeholder="hello@maximeheckel.com"
+                placeholder="contact@example.com"
                 onChange={() => {}}
-                value="hello@maximeheckel.com"
+                value="contact@example.com"
               />
 
               <TextInput
@@ -1010,8 +1010,8 @@ they can change the world, are the ones who do.`}
             <H2>Tooltip</H2>
             <Tooltip
               id="exampletooltip"
-              content="@MaximeHeckel"
-              visuallyHiddenText="Follow Me on Twitter"
+              content="@data____v"
+              visuallyHiddenText="Follow Me on Instagram"
             >
               <Flex
                 alignItems="center"

@@ -1,6 +1,6 @@
-# blog.maximeheckel.com
+# Valerie Andy's Blog
 
-This is the main code base for [my blog](https://blog.maximeheckel.com).
+This is the main code base for my blog - home to my audio visualizer series exploring sonic identity through creative code.
 
 ## Tech Stack
 
@@ -8,7 +8,7 @@ This is the main code base for [my blog](https://blog.maximeheckel.com).
 - Stitches / CSS
 - MDX
 
-Design is handmade and packaged separately at [@maximeheckel/design-system](https://github.com/MaximeHeckel/design-system).
+Design is based on [@maximeheckel/design-system](https://github.com/MaximeHeckel/design-system).
 
 ## License
 

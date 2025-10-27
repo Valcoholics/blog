@@ -3,11 +3,9 @@ import {
   Flex,
   GlassMaterial,
   Text,
-  useKeyboardShortcut,
 } from '@maximeheckel/design-system';
 import debounce from 'lodash.debounce';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
-import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import React, { useCallback, useState } from 'react';
 
@@ -18,24 +16,16 @@ import Logo from './Logo';
 enum NAV {
   INDEX = 'Index',
   ARTICLES = 'Articles',
-  CMD = 'Cmd',
-  ASK = 'Ask',
 }
-
-const Search = dynamic(() => import('@core/components/Search'));
 
 const Dock = () => {
   const [focused, setFocused] = useState<NAV | null>(null);
   const [isKeyboardNav, setIsKeyboardNav] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [isAIModeOpen, setIsAIModeOpen] = useState(false);
   const router = useRouter();
   const isHomePage = router.pathname === '/';
 
   const shouldReduceMotion = useReducedMotion();
   const isMobile = useIsMobile();
-
-  useKeyboardShortcut('ctrl+k|meta+k', () => setIsSearchOpen(true));
 
   const navItems = Object.values(NAV);
   const navActions = {
@@ -64,12 +54,6 @@ const Dock = () => {
       } else {
         router.push('/#articles');
       }
-    },
-    [NAV.CMD]: () => {
-      setIsSearchOpen(true);
-    },
-    [NAV.ASK]: () => {
-      setIsAIModeOpen(true);
     },
   };
 
@@ -112,12 +96,6 @@ const Dock = () => {
 
   return (
     <>
-      <Search open={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
-      <Search
-        open={isAIModeOpen}
-        onClose={() => setIsAIModeOpen(false)}
-        forceAIMode
-      />
       <Box
         as="nav"
         css={{

@@ -30,7 +30,7 @@ import { globby } from 'globby';
           const route = path === '/index' ? '' : path;
 
           return `<url>
-  <loc>${`https://blog.maximeheckel.com${route}/`}</loc>
+  <loc>${`http://localhost:3000${route}/`}</loc>
   <changefreq>daily</changefreq>
   <priority>0.7</priority>
 </url>`;

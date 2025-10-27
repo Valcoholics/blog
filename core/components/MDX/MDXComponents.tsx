@@ -173,16 +173,6 @@ const ColorChannelSummary = dynamic(
     import('./Widgets/RefractionDispersionReactThreeFiber/ColorChannelSummary')
 );
 
-const CosineSimilarity = dynamic(
-  () => import('./Widgets/SemanticSearch/CosineSimilarity')
-);
-
-const Formatting = dynamic(() => import('./Widgets/SemanticSearch/Formatting'));
-
-const DemoSearch = dynamic(() => import('./Widgets/SemanticSearch/DemoSearch'));
-
-const DemoButton = dynamic(() => import('./Widgets/SemanticSearch/DemoButton'));
-
 const RaymarchingVisualizer = dynamic(
   () => import('./Widgets/Raymarching/RaymarchingVisualizer')
 );
@@ -323,10 +313,6 @@ const customComponents = {
   AttributesVisualizer,
   RGBShiftVisualizer,
   ColorChannelSummary,
-  CosineSimilarity,
-  Formatting,
-  DemoSearch,
-  DemoButton,
   RaymarchingVisualizer,
   VolumetricRaymarchingVisualizer,
   BeforeAfterImage,

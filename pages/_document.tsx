@@ -8,49 +8,11 @@ class MyDocument extends Document {
       <Html lang="en" className="maximeheckel-light">
         <Head>
           <link
-            href="/static/favicons/apple-touch-icon.png"
-            rel="apple-touch-icon"
-            sizes="180x180"
-          />
-          <link
-            href="/static/favicons/favicon-196x196.png"
+            href="/favicon.svg"
             rel="icon"
-            sizes="196x196"
-            type="image/png"
-          />
-          <link
-            href="/static/favicons/favicon-128x128.png"
-            rel="icon"
-            sizes="128x128"
-            type="image/png"
-          />
-          <link
-            href="/static/favicons/favicon-96x96.png"
-            rel="icon"
-            sizes="96x96"
-            type="image/png"
-          />
-          <link
-            href="/static/favicons/favicon-32x32.png"
-            rel="icon"
-            sizes="32x32"
-            type="image/png"
-          />
-          <link
-            href="/static/favicons/favicon-16x16.png"
-            rel="icon"
-            sizes="16x16"
-            type="image/png"
+            type="image/svg+xml"
           />
           <link rel="alternate" type="application/rss+xml" href="/rss.xml" />
-          <link
-            rel="webmention"
-            href="https://webmention.io/blog.maximeheckel.com/webmention"
-          />
-          <link
-            rel="pingback"
-            href="https://webmention.io/blog.maximeheckel.com/xmlrpc"
-          />
           <style
             id="stitches"
             dangerouslySetInnerHTML={{ __html: getCssText() }}
