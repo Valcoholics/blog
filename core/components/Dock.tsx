@@ -131,7 +131,23 @@ const Dock = () => {
               marginBottom: 1,
             }}
           >
-            <Logo alt="Logo" size={24} />
+            <Box
+              as="button"
+              css={{
+                background: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                padding: 0,
+                display: 'flex',
+                alignItems: 'center',
+                outline: 'none',
+                WebkitTapHighlightColor: 'transparent',
+              }}
+              onClick={navActions[NAV.INDEX]}
+              aria-label="Home"
+            >
+              <Logo alt="Logo" size={24} />
+            </Box>
             <Box
               css={{
                 width: 1,
