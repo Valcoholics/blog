@@ -142,6 +142,7 @@ const Dock = () => {
                 alignItems: 'center',
                 outline: 'none',
                 WebkitTapHighlightColor: 'transparent',
+                color: 'inherit',
               }}
               onClick={navActions[NAV.INDEX]}
               aria-label="Home"
