@@ -14,8 +14,7 @@ const StyledSection = styled('section', {
   },
 });
 
-const Footnote = ({ title, url }: { title: string; url: string }) => {
-
+const Footnote = (_props: { title: string; url: string }) => {
   return (
     <StyledSection data-testid="footnote">
       <Flex
