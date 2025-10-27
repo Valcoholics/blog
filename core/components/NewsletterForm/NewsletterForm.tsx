@@ -161,20 +161,18 @@ const NewsletterForm = (props: Props) => {
               },
             }}
           >
-            <TextInput
-              aria-label="Email"
-              id="email-input"
-              type="email"
-              placeholder="your@email.com"
-              autoComplete="off"
-              value={email}
-              onChange={(event) => setEmail(event.currentTarget.value)}
-              required
-              css={{
-                flex: 1,
-                minWidth: 0,
-              }}
-            />
+            <Box css={{ flex: 1, minWidth: 0 }}>
+              <TextInput
+                aria-label="Email"
+                id="email-input"
+                type="email"
+                placeholder="your@email.com"
+                autoComplete="off"
+                value={email}
+                onChange={(event) => setEmail(event.currentTarget.value)}
+                required
+              />
+            </Box>
             <Glow>
               <Button
                 aria-label="Subscribe to my newsletter"
