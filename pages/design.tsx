@@ -46,16 +46,12 @@ import Tweet from '@core/components/Tweet';
 const SandpackExample = dynamic(
   () => import('@core/components/MDX/Widgets/WaveAnimation/Sandpack')
 );
-const Search = dynamic(() => import('@core/components/Search'), {
-  ssr: false,
-});
 
 const Label = styled('p', {
   marginBottom: '8px',
 });
 
 export default function Design(props: { tweets: Record<string, NewTweet> }) {
-  const [showSearch, setShowSearch] = React.useState(false);
   const [email, setEmail] = React.useState('');
   const [rangeValue, setRangeValue] = React.useState(250);
 
@@ -1159,20 +1155,6 @@ function sayHi(name) {
                 some other custom React components. As you want!
               </Details.Content>
             </Details>
-          </Flex>
-          <Flex
-            alignItems="start"
-            as="section"
-            css={{ alignSelf: 'stretch' }}
-            direction="column"
-            gap="5"
-            id="command-center"
-          >
-            <H2>Command Center / Search </H2>
-            <Button variant="primary" onClick={() => setShowSearch(true)}>
-              Show Command Center
-            </Button>
-            <Search onClose={() => setShowSearch(false)} open={showSearch} />
           </Flex>
           <Flex
             alignItems="start"
