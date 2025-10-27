@@ -43,9 +43,9 @@ const __dirname = path.dirname(__filename);
       title: "Valerie Andy's Blog",
       description:
         "Hi I'm Valerie Andy, and this is my blog. Home to my audio visualizer series exploring sonic identity through creative code, released every Wednesday. As a computational designer, I dive deep into the intersection of sound, code, and visual expression.",
-      site_url: 'http://localhost:3000',
-      feed_url: 'http://localhost:3000/rss.xml',
-      image_url: 'http://localhost:3000/static/og/main-og-image.png',
+      site_url: 'https://blog.data-v.site',
+      feed_url: 'https://blog.data-v.site/rss.xml',
+      image_url: 'https://blog.data-v.site/static/og/main-og-image.png',
       language: 'en',
     });
 
@@ -54,7 +54,7 @@ const __dirname = path.dirname(__filename);
     );
 
     content.forEach((post) => {
-      const url = `http://localhost:3000/posts/${post.slug}`;
+      const url = `https://blog.data-v.site/posts/${post.slug}`;
 
       feed.item({
         title: post.title,
