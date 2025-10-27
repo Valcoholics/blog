@@ -6,6 +6,7 @@ import { BottomBlurGradientMask } from '@core/components/BottomBlurGradientMask'
 import { Dock } from '@core/components/Dock';
 import Footer from '@core/components/Footer';
 import { Main } from '@core/components/Main';
+import NewsletterForm from '@core/components/NewsletterForm';
 import { ArticlesSection } from '@core/features/ArticlesSection';
 import { IndexSection } from '@core/features/IndexSection';
 
@@ -59,6 +60,16 @@ const NewHome = (props: Props) => {
       >
         <IndexSection />
         <ArticlesSection posts={posts} />
+        <Grid.Item col={2}>
+          <Box
+            css={{
+              marginTop: 'var(--space-10)',
+              marginBottom: 'var(--space-10)',
+            }}
+          >
+            <NewsletterForm />
+          </Box>
+        </Grid.Item>
       </Grid>
       <BottomBlurGradientMask />
       <Footer />

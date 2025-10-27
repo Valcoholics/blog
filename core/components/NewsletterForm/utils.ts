@@ -1,5 +1,5 @@
 export const subscribeCall = (data: { email: string }) =>
-  fetch('https://api.mhkl.io/api/newsletter/subscribe/', {
+  fetch('https://YOUR_MAILCHIMP_API_ENDPOINT_HERE', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

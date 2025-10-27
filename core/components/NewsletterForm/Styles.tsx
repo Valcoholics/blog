@@ -5,17 +5,17 @@ export const NewsletterFormContent = styled(Card.Body, {
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'start',
-  gap: 'var(--space-5)',
+  gap: 'var(--space-2)',
   variants: {
     withOffset: {
       true: {
-        padding: '48px',
+        padding: '32px',
         '@media (max-width: 700px)': {
-          padding: '48px 20px 30px 20px',
+          padding: '32px 20px 24px 20px',
         },
       },
       false: {
-        padding: '24px',
+        padding: '16px',
       },
     },
   },
