@@ -1,0 +1,261 @@
+---
+title: 'StarViz: Building an Audio-Reactive GLSL Visualizer'
+subtitle: Reverse-engineering the dreamy, pulsing visualizer from Peggy Gou's website. I break down how I built this from the ground up by layering effects in a single fragment shader in GLSL, creating a radial starburst pattern that pulses and gradient-cycles in sync with music.
+date: '2025-08-28T08:00:00.000Z'
+updated: '2025-10-27T08:00:00.000Z'
+categories: []
+keywords: ['glsl', 'audio visualization', 'shaders', 'webgl', 'audio reactive']
+slug: starviz-audio-reactive-shader-visualization
+type: 'blogPost'
+featured: false
+---
+
+I reverse-engineered the dreamy, pulsing visualizer from Peggy Gou's website, building it from the ground up by layering effects in a single fragment shader in GLSL. This tutorial breaks down what I did, step by step.
+
+<Callout label="Before you start" variant="info">
+
+👉 This article assumes you have basic knowledge about shaders and GLSL. If not, check out some fundamental shader resources first.
+
+</Callout>
+
+## Understanding Distance Functions
+
+Before we jump into building our visualizer, let's understand the fundamental building block: the distance function. In shader programming, we calculate the distance from each pixel to a center point. This distance value becomes the foundation for creating radial patterns.
+
+<StarVizSandpack scene="scene1" />
+
+The visualization above shows how distance creates a natural gradient from the center. Brighter areas are closer to the center, darker areas are further away. This simple concept is the basis for all circular patterns in our visualizer.
+
+## The Foundation: Smoothstep for Soft Edges
+
+We'll start with the foundation: one circle. The size is determined by the `distance()` from the center of the screen, but to create those soft, dreamy edges, we use the `smoothstep` function.
+
+```glsl title=Basic circle using distance from center
+float dist = distance(uv, center);
+float circle = 1.0 - smoothstep(size - 0.04, size + 0.04, dist);
+```
+
+The `smoothstep` function creates soft edges by interpolating between two threshold values, giving us that smooth, blurred appearance right from the start.
+
+<StarVizSandpack scene="scene2" />
+
+## Three Concentric Circles
+
+Great, now let's make three concentric ones. Which just means circles that share the exact same center point but have different radii.
+
+```glsl title=Creating three concentric circles
+float circle1 = 1.0 - smoothstep(size - 0.04, size + 0.04, dist);
+float circle2 = 1.0 - smoothstep((size + 0.05) - 0.06, (size + 0.05) + 0.06, dist);
+float circle3 = 1.0 - smoothstep((size + 0.1) - 0.08, (size + 0.1) + 0.08, dist);
+```
+
+Notice how each successive circle has a larger blur range (0.04, 0.06, 0.08). This creates more diffusion as we move outward, adding to that dreamy aesthetic.
+
+<StarVizSandpack scene="scene3" />
+
+## Making it React to Audio
+
+Now for the heartbeat: making it react to audio. We'll work with a 'bass' value as our reactive design approach. I sample low-frequency bass from an audio texture at a specific UV coordinate `vec2(0.01, 0.25)`. This value is smoothed and clamped, then fed into the circle calculations to make them pulse in sync with the music.
+
+```glsl title=Sampling audio data for reactivity
+float bass = texture2D(iChannel0, vec2(0.01, 0.25)).x;
+bass = smoothstep(0.2, 0.5, bass) * 0.8;
+bass = clamp(bass, 0.0, 0.7);
+```
+
+The `smoothstep` here helps eliminate noise and creates smooth transitions between audio levels. The clamp ensures we don't get values that are too extreme.
+
+## Adding a Secondary Wave
+
+Cool, so the pulse we have right now is flat. Let's add a secondary wave of animation that makes the circles breathe independently for more depth. I create a radial sine wave based on the distance from the center and time. By mixing this wave with the intensity of our circles, you can make them throb and breathe.
+
+```glsl title=Creating a radial breathing effect
+float slowTime = iTime * 0.5;
+float waveSpeed = 2.0;
+float waveCount = 5.0;
+float radialWave = sin(dist * waveCount - slowTime * waveSpeed);
+radialWave = 0.5 + 0.5 * radialWave;
+
+circle1 *= mix(1.0, radialWave, 0.3);
+circle2 *= mix(1.0, radialWave, 0.2);
+circle3 *= mix(1.0, radialWave, 0.1);
+```
+
+Each circle receives a different amount of wave influence, creating a layered, organic breathing effect.
+
+## Creating the Starburst Shape
+
+Just to make this design our own, we're going to turn it into a starburst shape. So using polar coordinates I calculate the angle from the center using `atan()`, then apply a high-frequency sine wave (frequency ~20). This warps the circles, creating the spikes.
+
+```glsl title=Transforming circles into a starburst
+float angle = atan(uv.y - center.y, uv.x - center.x);
+float waveIntensity = 0.03;
+float waveFrequency = 20.0;
+float wave = waveIntensity * sin(angle * waveFrequency + slowTime * 4.0);
+
+// Add wave to circle calculations
+float circle1 = 1.0 - smoothstep(size + wave - 0.04, size + wave + 0.04, dist);
+```
+
+The sine wave warps the radius based on the angle, creating those characteristic star points that pulse and rotate.
+
+<StarVizSandpack scene="scene4" />
+
+## Color and Reactivity
+
+Now for the color and its reactivity. We'll create a base color, then layer in influences from our pulses and audio. The gradient is a classic technique: `0.5 + 0.5 * cos(time + vec3(0,2,4) + bass)`, basically most shader tutorials go through this.
+
+```glsl title=Generating reactive color gradients
+vec3 baseColor = 0.5 + 0.5 * cos(slowTime * 0.5 + vec3(0, 2, 4) + bass * 0.5);
+baseColor = mix(baseColor, vec3(1.0), 0.7); // Brighten the colors
+
+float centerPulse = 0.5 + 0.5 * sin(slowTime * 3.0);
+float bassPulse = bass * 0.4;
+centerPulse = mix(centerPulse, 1.0, bassPulse);
+
+vec3 color = baseColor * (0.9 + 0.1 * centerPulse + bass * 0.1);
+```
+
+This generates a smooth, endlessly evolving gradient palette where the bass subtly shifts the hues. I use the audio and pulse values to control the brightness and intensity of the colors, and add a radial gradient for depth.
+
+## Adding a Glowing Core
+
+A for aesthetic I really want the core to beam bright. So I'm creating a separate glowing core that pulses with the bass. This turns a simple color swap into a dynamic lighting system.
+
+```glsl title=Creating a pulsing glow at the center
+float centerGlow = 1.0 - smoothstep(0.0, 0.1 + bass * 0.05, dist);
+color += centerGlow * baseColor * (0.1 + bass * 0.1);
+```
+
+At this point, we have all the core layers working together: the starburst shape, audio reactivity with simulated bass, radial waves, color gradients, and the glowing core. Let's see how it all looks combined:
+
+<StarVizSandpack scene="scene5" />
+
+## Blur for Dreamy Aesthetics
+
+That looks really cool but just a slight tweak here the dreamy blurred glow requires manual post processing. It's complex so just to keep things honest this was copy paste, but basically for this specific piece how I blur with code is by taking each pixel in the design, creating a 5x5 grid of all of the colors next to it, then blending the results.
+
+```glsl title=Manual blur implementation (simplified)
+vec3 blurred = color;
+float blurAmount = 0.004;
+
+for (int i = -2; i <= 2; i++) {
+    for (int j = -2; j <= 2; j++) {
+        if (i != 0 || j != 0) {
+            vec2 offset = vec2(float(i), float(j)) * blurAmount;
+            vec2 sampleUV = uv + offset;
+
+            // Sample and accumulate colors from neighboring pixels
+            // ... (recalculate the effect at this position)
+            blurred += sampleColor;
+        }
+    }
+}
+
+blurred /= float(samples + 1);
+color = mix(color, blurred, 0.25);
+```
+
+<Callout variant="info">
+
+This blur technique is quite expensive computationally, as it requires recalculating the entire effect for each neighboring pixel. For better performance on lower-end devices, you could reduce the blur grid size or skip this step entirely.
+
+</Callout>
+
+Here's a simplified 3x3 blur in action alongside the vignette and gamma correction:
+
+<StarVizSandpack scene="scene6" />
+
+## Final Polish: Vignette and Gamma Correction
+
+Cooooool. So one last thing: a vignette to darken the edges and gamma correction to make the colors pop. `pow(color, 1.0/1.2)` adds depth and ensures the colors feel rich and natural.
+
+```glsl title=Adding vignette and gamma correction
+// Vignette
+float vignette = 1.0 - smoothstep(0.4, 1.2, length(uv - vec2(0.5 * aspect, 0.5)));
+color *= vignette;
+
+// Gamma correction
+color = pow(color, vec3(1.0/1.2));
+```
+
+## Audio Integration with Web Audio API
+
+To make this work in the browser, we need to connect the Web Audio API to our shader. Here's how the audio data flows into the visualization:
+
+```javascript title=Setting up audio analysis
+const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+const analyser = audioContext.createAnalyser();
+analyser.fftSize = 2048;
+analyser.smoothingTimeConstant = 0.8;
+
+const audioData = new Uint8Array(analyser.frequencyBinCount);
+const source = audioContext.createMediaElementSource(audio);
+source.connect(analyser);
+analyser.connect(audioContext.destination);
+```
+
+Then we extract frequency data and pass it to the shader as a texture:
+
+```javascript title=Extracting frequency data for shader
+analyser.getByteFrequencyData(audioData);
+
+// Map frequency ranges
+const bassRange = audioData.slice(0, 10); // ~0-100Hz
+const bassAvg = bassRange.reduce((a, b) => a + b, 0) / bassRange.length / 255;
+
+// Create frequency texture
+const frequencyTexture = new Float32Array(256);
+frequencyTexture[0] = Math.min(1.0, bassAvg * 2.0);
+
+// Upload to WebGL
+gl.texImage2D(
+  gl.TEXTURE_2D,
+  0,
+  gl.LUMINANCE,
+  256,
+  1,
+  0,
+  gl.LUMINANCE,
+  gl.FLOAT,
+  frequencyTexture
+);
+```
+
+## The Six Layers of Animation
+
+The final result is a performant, self-contained shader that transforms any audio input into a living, breathing starlight with 6 layers of animation:
+
+1. **Base concentric circles** - The foundation structure
+2. **Audio reactivity** - Bass-driven pulsing
+3. **Radial breathing wave** - Secondary organic motion
+4. **Starburst warping** - Angular sine wave deformation
+5. **Color gradient cycling** - Smooth hue transitions
+6. **Glowing core** - Dynamic center lighting
+
+Here's the complete visualization with all layers combined:
+
+<StarVizSandpack scene="scene7" />
+
+<Callout variant="info">
+
+The complete source code is available on [Shadertoy](https://www.shadertoy.com/view/wfScRW) and the live version can be found on [my website](https://data-v.super.site/).
+
+</Callout>
+
+## Performance Considerations
+
+This shader can be quite intensive, especially with the blur post-processing. Here are some tips for optimization:
+
+- **Reduce blur samples**: Use a 3x3 grid instead of 5x5
+- **Lower resolution**: Run at 0.75 DPR or lower on weaker devices
+- **Simplify audio processing**: Reduce FFT size if needed
+- **Skip expensive operations**: The blur is optional for basic functionality
+
+## Final Thoughts
+
+Building StarViz taught me a lot about layering simple effects to create complex visuals. The key is understanding how each layer contributes to the final result and how they interact with each other. Audio reactivity adds that special "alive" quality that makes the visualization feel connected to the music.
+
+The dreamy aesthetic comes from soft edges, gentle pulsing, and that custom blur - but the core technique is accessible to anyone comfortable with basic GLSL. Start simple with one circle, then add each layer one at a time.
+
+Thanks for reading, and I hope this inspires you to create your own audio visualizations!

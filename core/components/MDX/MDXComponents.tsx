@@ -275,6 +275,8 @@ const ParticleCompute = dynamic(
 
 const TSLWebGPUSandpack = dynamic(() => import('./Widgets/TSLWebGPU/Sandpack'));
 
+const StarVizSandpack = dynamic(() => import('./Widgets/StarViz/Sandpack'));
+
 const Slideshow = dynamic(() => import('../Slideshow'));
 
 const customComponents = {
@@ -349,6 +351,7 @@ const customComponents = {
   PostProcessingSandpack,
   VolumetricLightingSandpack,
   TSLWebGPUSandpack,
+  StarVizSandpack,
 };
 
 const MDXComponents = {
