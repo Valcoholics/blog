@@ -6,6 +6,7 @@ export type ReadingTime = {
 
 export type Post = {
   colorFeatured?: string;
+  coverImage?: string;
   date: string;
   updated: string;
   featured?: boolean;
