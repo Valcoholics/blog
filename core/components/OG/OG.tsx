@@ -83,7 +83,7 @@ const OG = () => {
         }}
       >
         <Logo size={65} stroke="#FFFFFF" />
-        <BlendedText>@MaximeHeckel</BlendedText>
+        <BlendedText>@data____v</BlendedText>
       </div>
     </div>
   );

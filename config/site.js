@@ -28,7 +28,7 @@ const config = {
   author: 'Valerie Andy', // Author for schemaORGJSONLD
   themeColor: '#000000',
   backgroundColor: '#ffffff',
-  twitter: '', // Twitter Username
+  twitter: 'data____v', // Twitter Username
   twitterDesc:
     'Valerie Andy is a computational designer exploring sonic identity through audio visualization and creative code.',
 };
