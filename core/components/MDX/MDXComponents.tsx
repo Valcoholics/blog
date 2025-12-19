@@ -2,6 +2,7 @@
 import {
   Anchor,
   Blockquote,
+  Box,
   Button,
   Card,
   Details,
@@ -22,6 +23,7 @@ import Fullbleed from '@core/components/Fullbleed';
 import H2 from '@core/components/H2';
 import VideoPlayer from '@core/components/VideoPlayer';
 import VideoEmbed from '@core/components/VideoEmbed';
+import NewsletterForm from '@core/components/NewsletterForm';
 
 import SupportCallout from '../Callout/SupportCallout';
 // MDX only components
@@ -363,6 +365,7 @@ const MDXComponents = {
     );
   },
   Anchor,
+  Box,
   Button,
   blockquote: Blockquote,
   Callout,
@@ -394,6 +397,7 @@ const MDXComponents = {
   SupportCallout,
   VideoPlayer,
   VideoEmbed,
+  NewsletterForm,
   ...customComponents,
 };
 
