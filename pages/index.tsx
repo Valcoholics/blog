@@ -6,7 +6,6 @@ import { BottomBlurGradientMask } from '@core/components/BottomBlurGradientMask'
 import { Dock } from '@core/components/Dock';
 import Footer from '@core/components/Footer';
 import { Main } from '@core/components/Main';
-import NewsletterForm from '@core/components/NewsletterForm';
 import { ArticlesSection } from '@core/features/ArticlesSection';
 import { IndexSection } from '@core/features/IndexSection';
 
