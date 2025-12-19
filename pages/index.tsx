@@ -61,14 +61,8 @@ const NewHome = (props: Props) => {
         <IndexSection />
         <ArticlesSection posts={posts} />
         <Grid.Item col={2}>
-          <Box
-            css={{
-              marginTop: 'var(--space-10)',
-              marginBottom: 'var(--space-10)',
-            }}
-          >
-            <NewsletterForm />
-          </Box>
+
+
         </Grid.Item>
       </Grid>
       <BottomBlurGradientMask />

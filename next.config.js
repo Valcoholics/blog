@@ -80,8 +80,9 @@ export default output;
 const ContentSecurityPolicy = `
     default-src 'self';
     object-src 'self' data:;
-    script-src 'self' 'unsafe-eval' 'unsafe-inline' *.youtube.com *.twitter.com *.vercel-scripts.com; 
-    child-src *.youtube.com *.google.com *.twitter.com *.codesandbox.io;
+    script-src 'self' 'unsafe-eval' 'unsafe-inline' *.youtube.com *.twitter.com *.vimeo.com player.vimeo.com *.vercel-scripts.com;
+    child-src *.youtube.com *.google.com *.twitter.com *.vimeo.com player.vimeo.com *.codesandbox.io;
+    frame-src *.youtube.com *.google.com *.twitter.com *.vimeo.com player.vimeo.com *.codesandbox.io;
     style-src 'self' 'unsafe-inline' *.googleapis.com;
     img-src * blob: data:;
     media-src 'self' https://d2xl4m2ghaywko.cloudfront.net https://video.twimg.com;
