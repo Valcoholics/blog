@@ -66,11 +66,14 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       // TODO: write proper return types for getTweets
       post.tweetIDs.length > 0 ? await getTweets(post.tweetIDs) : {};
 
-    const ogImage = await getOgImage({
-      title: post.frontMatter.title,
-      background: post.frontMatter.colorFeatured,
-      color: post.frontMatter.fontFeatured,
-    });
+    // Use custom cover image if specified, otherwise generate OG image
+    const ogImage = post.frontMatter.coverImage
+      ? post.frontMatter.coverImage
+      : await getOgImage({
+          title: post.frontMatter.title,
+          background: post.frontMatter.colorFeatured,
+          color: post.frontMatter.fontFeatured,
+        });
     return { props: { post, ogImage, tweets } };
   } catch (error) {
     // eslint-disable-next-line
