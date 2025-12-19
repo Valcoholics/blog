@@ -250,6 +250,25 @@ const BlogPost = ({ children, frontMatter, ogImage }: Props) => {
           >
             {title}
           </Text>
+          {subtitle && (
+            <Text
+              as="p"
+              css={{
+                fontWeight: 400,
+                letterSpacing: '-0.5px',
+                lineHeight: 1.4,
+                textWrap: 'balance',
+                textAlign: 'left',
+                marginTop: 'var(--space-2)',
+              }}
+              data-testid="post-subtitle"
+              family="serif"
+              size="4"
+              variant="secondary"
+            >
+              {subtitle}
+            </Text>
+          )}
           <time itemProp="datepublished" dateTime={date}>
             <ScrambledText
               css={{

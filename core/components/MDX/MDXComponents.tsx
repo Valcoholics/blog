@@ -21,6 +21,7 @@ import { FootnoteRef, FootnotesList } from '@core/components/Footnotes';
 import Fullbleed from '@core/components/Fullbleed';
 import H2 from '@core/components/H2';
 import VideoPlayer from '@core/components/VideoPlayer';
+import VideoEmbed from '@core/components/VideoEmbed';
 
 import SupportCallout from '../Callout/SupportCallout';
 // MDX only components
@@ -392,6 +393,7 @@ const MDXComponents = {
   Slideshow,
   SupportCallout,
   VideoPlayer,
+  VideoEmbed,
   ...customComponents,
 };
 

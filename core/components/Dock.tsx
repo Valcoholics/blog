@@ -16,6 +16,7 @@ import Logo from './Logo';
 enum NAV {
   INDEX = 'Index',
   ARTICLES = 'Articles',
+  OFFERINGS = 'Offerings',
 }
 
 const Dock = () => {
@@ -54,6 +55,12 @@ const Dock = () => {
       } else {
         router.push('/#articles');
       }
+    },
+    [NAV.OFFERINGS]: (event: React.MouseEvent) => {
+      event.preventDefault();
+      event.stopPropagation();
+
+      router.push('/offerings');
     },
   };
 
