@@ -454,6 +454,10 @@ const OfferingsPage = () => {
 
                 <AccordionCard title="Sonic Branding & Event Visuals">
                   <Grid gapY={4}>
+                    <Text as="p" variant="secondary">
+                      Visual systems designed to give your event or brand a distinct sonic and visual identity.
+                    </Text>
+
                     <Box>
                       <Flex
                         justifyContent="space-between"
@@ -462,7 +466,7 @@ const OfferingsPage = () => {
                         onClick={() => setTier1Expanded(!tier1Expanded)}
                       >
                         <Text as="p" weight="4" variant="primary">
-                          Tier 1: Pre-Rendered Animated Video Content
+                          Tier 1 – Visual Direction
                         </Text>
                         <Text as="span" variant="tertiary">
                           {tier1Expanded ? '−' : '+'}
@@ -479,20 +483,16 @@ const OfferingsPage = () => {
                         >
                           <Grid gapY={2}>
                             <ServiceItem>
-                              Creative consultation & moodboard (2-3 visual
-                              direction concepts, one round of revisions)
+                              Creative consultation & moodboard
                             </ServiceItem>
                             <ServiceItem>
-                              Custom designed visuals based on your creative
-                              direction
+                              2–3 visual direction concepts
                             </ServiceItem>
                             <ServiceItem>
-                              Standard animation (non-audio reactive) delivered
-                              as MP4 files via shared Google Drive
+                              One revision round
                             </ServiceItem>
                             <ServiceItem>
-                              Ready for playback on TV/projector via any media
-                              player
+                              Delivered as MP4 files for easy playback on screens or projectors
                             </ServiceItem>
                           </Grid>
                         </Box>
@@ -515,7 +515,7 @@ const OfferingsPage = () => {
                         onClick={() => setTier2Expanded(!tier2Expanded)}
                       >
                         <Text as="p" weight="4" variant="primary">
-                          Tier 2: Audio-Reactive Content
+                          Tier 2 – Reactive Visual Systems
                         </Text>
                         <Text as="span" variant="tertiary">
                           {tier2Expanded ? '−' : '+'}
@@ -532,40 +532,41 @@ const OfferingsPage = () => {
                         >
                           <Grid gapY={2}>
                             <ServiceItem>
-                              Everything in Tier 1, PLUS
+                              Includes everything in Tier 1, plus:
                             </ServiceItem>
                             <ServiceItem>
-                              Visuals with real-time audio reactivity (responds
-                              to music frequencies and BPM)
+                              Real-time audio-reactive visuals (responsive to music & sound)
                             </ServiceItem>
                             <ServiceItem>
-                              Delivered as source project files
-                              (Resolume/TouchDesigner/code) via shared Google
-                              Drive
+                              Delivered as editable source files (Resolume / TouchDesigner / code)
                             </ServiceItem>
                             <ServiceItem>
-                              You can modify, reuse, and repurpose for future
-                              events
-                            </ServiceItem>
-                            <ServiceItem>
-                              Full ownership and unlimited usage rights
+                              Full ownership and unlimited reuse across events
                             </ServiceItem>
                           </Grid>
                         </Box>
                       )}
                     </Box>
-
-                    <Box
-                      css={{
-                        height: '1px',
-                        background: 'var(--border-primary)',
-                        opacity: 0.5,
-                      }}
-                    />
-
-                    <Text as="p" variant="tertiary" css={{ fontSize: '14px' }}>
-                      Web asset creation available — custom quote
-                    </Text>
+                    <Flex gap="3" css={{ marginTop: 'var(--space-2)' }}>
+                      <Button
+                        as="a"
+                        href="#"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        variant="primary"
+                      >
+                        Send Inquiry
+                      </Button>
+                      <Button
+                        as="a"
+                        href="https://www.behance.net/data-v"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        variant="secondary"
+                      >
+                        View Portfolio
+                      </Button>
+                    </Flex>
                   </Grid>
                 </AccordionCard>
 
@@ -573,20 +574,19 @@ const OfferingsPage = () => {
                 <AccordionCard title="Technical Production for Immersive Events">
                   <Grid gapY={3}>
                     <Text as="p" variant="secondary">
-                      Custom solutions for immersive experiences and interactive
-                      installations.
+                      I collaborate with artists, institutions, and experimental teams developing immersive work that sits at the intersection of art, code, and spatial storytelling.
+                    </Text>
+                    <Text as="p" variant="secondary" weight="4">
+                      I'm especially interested in projects involving:
                     </Text>
                     <Box as="ul" css={{ listStyle: 'none', padding: 0 }}>
                       <Grid gapY={2}>
-                        <ServiceItem>AV art installations</ServiceItem>
+                        <ServiceItem>AV Art installations and real-time visual systems</ServiceItem>
                         <ServiceItem>
-                          Information dashboards for trade shows
+                          Interactive dashboards for exhibitions and live environments
                         </ServiceItem>
                         <ServiceItem>
-                          Web design + data visualization experiences
-                        </ServiceItem>
-                        <ServiceItem>
-                          Interactive microsites (unconventional info displays)
+                          Experimental microsites and data-driven interfaces
                         </ServiceItem>
                       </Grid>
                     </Box>
@@ -642,17 +642,6 @@ const OfferingsPage = () => {
                   <Text as="p" variant="secondary">
                     Yep, I am open for projects. Reach out via email to
                     discuss your needs.
-                  </Text>
-                </AccordionCard>
-
-                <AccordionCard
-                  title="What's your typical turnaround time?"
-                  variant="secondary"
-                >
-                  <Text as="p" variant="secondary">
-                    Tier 1 visuals typically take 2-3 weeks. Audio-reactive
-                    content takes 3-4 weeks. Rush delivery available for an
-                    additional fee.
                   </Text>
                 </AccordionCard>
 
