@@ -577,7 +577,7 @@ const OfferingsPage = () => {
                       I collaborate with artists, institutions, and experimental teams developing immersive work that sits at the intersection of art, code, and spatial storytelling.
                     </Text>
                     <Text as="p" variant="secondary" weight="4">
-                      I'm especially interested in projects involving:
+                      I&apos;m especially interested in projects involving:
                     </Text>
                     <Box as="ul" css={{ listStyle: 'none', padding: 0 }}>
                       <Grid gapY={2}>
@@ -666,7 +666,7 @@ const OfferingsPage = () => {
               direction="column"
               gap="5"
             >
-              <H2>Let's Create Something Together</H2>
+              <H2>Let&apos;s Create Something Together</H2>
               <Card variant="tertiary">
                 <Card.Body>
                   <Flex direction="column" gap="4">
