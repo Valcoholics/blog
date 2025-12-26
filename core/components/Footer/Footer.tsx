@@ -354,6 +354,14 @@ const Footer = (props: { lastUpdated?: string }) => {
                     >
                       Instagram
                     </Anchor>
+                    <Anchor
+                      discreet
+                      href="https://www.behance.net/data-v"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Behance
+                    </Anchor>
                     <Link href="/rss.xml" legacyBehavior passHref>
                       <Anchor discreet>RSS</Anchor>
                     </Link>
