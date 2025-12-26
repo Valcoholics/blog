@@ -236,7 +236,7 @@ const PricingQuickView = () => (
         Technical Production
       </Text>
       <Text weight="4" variant="primary" css={{ fontSize: '20px' }}>
-        Custom
+        Request Quote
       </Text>
     </Flex>
   </Flex>
@@ -547,6 +547,19 @@ const OfferingsPage = () => {
                         </Box>
                       )}
                     </Box>
+
+                    <Box
+                      css={{
+                        height: '1px',
+                        background: 'var(--border-primary)',
+                        opacity: 0.5,
+                      }}
+                    />
+
+                    <Text as="p" variant="tertiary" css={{ fontSize: '14px' }}>
+                      Web visualizer component available as additional delivery option
+                    </Text>
+
                     <Flex gap="3" css={{ marginTop: 'var(--space-2)' }}>
                       <Button
                         as="a"
