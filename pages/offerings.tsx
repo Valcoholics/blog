@@ -189,9 +189,13 @@ const PricingQuickView = () => (
       border: '1px solid var(--border-primary)',
       alignSelf: 'stretch',
       width: '100%',
+      '@sm': {
+        padding: 'var(--space-3)',
+        gap: 'var(--space-3)',
+      },
     }}
   >
-    <Flex direction="column" gap="1" css={{ flex: '1 1 140px' }}>
+    <Flex direction="column" gap="1" css={{ flex: '1 1 120px' }}>
       <Text
         variant="tertiary"
         css={{
@@ -209,7 +213,7 @@ const PricingQuickView = () => (
         </Text>
       </Text>
     </Flex>
-    <Flex direction="column" gap="1" css={{ flex: '1 1 140px' }}>
+    <Flex direction="column" gap="1" css={{ flex: '1 1 120px' }}>
       <Text
         variant="tertiary"
         css={{
@@ -224,7 +228,7 @@ const PricingQuickView = () => (
         From $800
       </Text>
     </Flex>
-    <Flex direction="column" gap="1" css={{ flex: '1 1 140px' }}>
+    <Flex direction="column" gap="1" css={{ flex: '1 1 120px' }}>
       <Text
         variant="tertiary"
         css={{
@@ -277,8 +281,12 @@ const ProcessSection = () => {
       <H2>How I Work</H2>
       <Grid
         css={{
-          gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
           gap: 'var(--space-4)',
+          '@sm': {
+            gridTemplateColumns: '1fr',
+            gap: 'var(--space-3)',
+          },
         }}
       >
         {steps.map((step) => (
@@ -342,7 +350,7 @@ const OfferingsPage = () => {
             width: '100%',
             position: 'relative',
             '@sm': {
-              minHeight: 'clamp(300px, 55dvh, 400px)',
+              minHeight: 'clamp(280px, 40dvh, 360px)',
             },
           }}
         >
@@ -354,6 +362,9 @@ const OfferingsPage = () => {
               lineHeight: 1.2,
               textWrap: 'balance',
               textAlign: 'left',
+              '@sm': {
+                fontSize: 'clamp(2.5rem, 8vw, 3.5rem)',
+              },
             }}
             family="serif"
             size="8"
@@ -369,6 +380,10 @@ const OfferingsPage = () => {
               fontFamily: 'var(--font-mono)',
               letterSpacing: '-1px',
               textTransform: 'uppercase',
+              '@sm': {
+                whiteSpace: 'normal',
+                fontSize: '11px',
+              },
             }}
             delay={0.5}
             speed={0.8}
@@ -402,8 +417,12 @@ const OfferingsPage = () => {
             css={{
               padding: 'var(--space-6) 0px',
               color: 'var(--text-secondary)',
+              gap: 'var(--space-10)',
+              '@sm': {
+                padding: 'var(--space-4) 0px',
+                gap: 'var(--space-6)',
+              },
             }}
-            gap="10"
           >
             {/* PRICING QUICK VIEW */}
             <PricingQuickView />
