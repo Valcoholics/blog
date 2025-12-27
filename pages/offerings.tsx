@@ -315,7 +315,7 @@ const OfferingsPage = () => {
 
   return (
     <Main>
-      <Seo title="Design Services - Data V" />
+      <Seo title="Design Services" />
       <Header />
       <Grid
         as="article"
@@ -535,7 +535,7 @@ const OfferingsPage = () => {
                               Includes everything in Tier 1, plus:
                             </ServiceItem>
                             <ServiceItem>
-                              Real-time audio-reactive visuals (responsive to music & sound)
+                              Real-time audio-reactive visuals
                             </ServiceItem>
                             <ServiceItem>
                               Delivered as editable source files (Resolume / TouchDesigner / code)
