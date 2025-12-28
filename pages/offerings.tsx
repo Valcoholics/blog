@@ -396,7 +396,7 @@ const OfferingsPage = () => {
             variant="tertiary"
             windowSize={3}
           >
-            Audio-reactive visuals • Sonic branding • Creative technology
+            Audio-reactive visuals • Sonic branding • Creative tech
           </ScrambledText>
 
           {/* INTRO PARAGRAPH - New addition */}
@@ -460,15 +460,21 @@ const OfferingsPage = () => {
                 >
                   <Grid gapY={3}>
                     <Text as="p" variant="secondary">
-                      A focused 90-minute working session designed to help you clarify ideas, solve creative roadblocks, and shape your next project with intention.
+                      A focused 90-minute working session designed to help you
+                      clarify ideas, solve creative roadblocks, and shape your
+                      next project with intention.
                     </Text>
                     <Text as="p" variant="secondary" weight="4">
                       Includes:
                     </Text>
                     <Box as="ul" css={{ listStyle: 'none', padding: 0 }}>
                       <Grid gapY={2}>
-                        <ServiceItem>Collaborative mind map & FigJam board</ServiceItem>
-                        <ServiceItem>Session recording for future reference</ServiceItem>
+                        <ServiceItem>
+                          Collaborative mind map & FigJam board
+                        </ServiceItem>
+                        <ServiceItem>
+                          Session recording for future reference
+                        </ServiceItem>
                       </Grid>
                     </Box>
                     <Button
@@ -486,7 +492,8 @@ const OfferingsPage = () => {
                 <AccordionCard title="Sonic Branding & Event Visuals">
                   <Grid gapY={4}>
                     <Text as="p" variant="secondary">
-                      Visual systems designed to give your event or brand a distinct sonic and visual identity.
+                      Visual systems designed to give your event or brand a
+                      distinct sonic and visual identity.
                     </Text>
 
                     <Box>
@@ -519,11 +526,10 @@ const OfferingsPage = () => {
                             <ServiceItem>
                               2–3 visual direction concepts
                             </ServiceItem>
+                            <ServiceItem>One revision round</ServiceItem>
                             <ServiceItem>
-                              One revision round
-                            </ServiceItem>
-                            <ServiceItem>
-                              Delivered as MP4 files for easy playback on screens or projectors
+                              Delivered as MP4 files for easy playback on
+                              screens or projectors
                             </ServiceItem>
                           </Grid>
                         </Box>
@@ -569,7 +575,8 @@ const OfferingsPage = () => {
                               Real-time audio-reactive visuals
                             </ServiceItem>
                             <ServiceItem>
-                              Delivered as editable source files (Resolume / TouchDesigner / code)
+                              Delivered as editable source files (Resolume /
+                              TouchDesigner / code)
                             </ServiceItem>
                             <ServiceItem>
                               Full ownership and unlimited reuse across events
@@ -588,7 +595,8 @@ const OfferingsPage = () => {
                     />
 
                     <Text as="p" variant="tertiary" css={{ fontSize: '14px' }}>
-                      Web visualizer component available as additional delivery option
+                      Web visualizer component available as additional delivery
+                      option
                     </Text>
 
                     <Flex gap="3" css={{ marginTop: 'var(--space-2)' }}>
@@ -618,16 +626,21 @@ const OfferingsPage = () => {
                 <AccordionCard title="Technical Production for Immersive Events">
                   <Grid gapY={3}>
                     <Text as="p" variant="secondary">
-                      I collaborate with artists, institutions, and experimental teams developing immersive work that sits at the intersection of art, code, and spatial storytelling.
+                      I collaborate with artists, institutions, and experimental
+                      teams developing immersive work that sits at the
+                      intersection of art, code, and spatial storytelling.
                     </Text>
                     <Text as="p" variant="secondary" weight="4">
                       I&apos;m especially interested in projects involving:
                     </Text>
                     <Box as="ul" css={{ listStyle: 'none', padding: 0 }}>
                       <Grid gapY={2}>
-                        <ServiceItem>AV Art installations and real-time visual systems</ServiceItem>
                         <ServiceItem>
-                          Interactive dashboards for exhibitions and live environments
+                          AV Art installations and real-time visual systems
+                        </ServiceItem>
+                        <ServiceItem>
+                          Interactive dashboards for exhibitions and live
+                          environments
                         </ServiceItem>
                         <ServiceItem>
                           Experimental microsites and data-driven interfaces
@@ -684,8 +697,8 @@ const OfferingsPage = () => {
                   variant="secondary"
                 >
                   <Text as="p" variant="secondary">
-                    Yep, I am open for projects. Reach out via email to
-                    discuss your needs.
+                    Yep, I am open for projects. Reach out via email to discuss
+                    your needs.
                   </Text>
                 </AccordionCard>
 
@@ -694,9 +707,9 @@ const OfferingsPage = () => {
                   variant="secondary"
                 >
                   <Text as="p" variant="secondary">
-                    Yes! All Tier 2 deliverables come with full ownership
-                    and unlimited usage rights. You can modify and reuse the
-                    files for future events.
+                    Yes! All Tier 2 deliverables come with full ownership and
+                    unlimited usage rights. You can modify and reuse the files
+                    for future events.
                   </Text>
                 </AccordionCard>
               </Grid>
@@ -715,13 +728,16 @@ const OfferingsPage = () => {
                 <Card.Body>
                   <Flex direction="column" gap="4">
                     <Text as="p" variant="secondary">
-                      Interested in working together? I&apos;d love to hear about your
-                      project and explore how we can collaborate.
+                      Interested in working together? I&apos;d love to hear
+                      about your project and explore how we can collaborate.
                     </Text>
                     <Flex direction="column" gap="2">
                       <Text as="p" variant="secondary">
                         Email:{' '}
-                        <Anchor href="mailto:contact@data-v.site" discreet={false}>
+                        <Anchor
+                          href="mailto:contact@data-v.site"
+                          discreet={false}
+                        >
                           contact@data-v.site
                         </Anchor>
                       </Text>
