@@ -333,6 +333,10 @@ const OfferingsPage = () => {
           backgroundColor: 'var(--background)',
           borderBottomRightRadius: 4,
           borderBottomLeftRadius: 4,
+          '@sm': {
+            gridTemplateColumns: '1fr',
+            padding: '0 var(--space-4)',
+          },
         }}
         gapX={4}
         templateColumns="1fr minmax(auto, 700px) 1fr"
@@ -351,6 +355,7 @@ const OfferingsPage = () => {
             position: 'relative',
             '@sm': {
               minHeight: 'clamp(280px, 40dvh, 360px)',
+              gridColumn: '1',
             },
           }}
         >
@@ -410,7 +415,14 @@ const OfferingsPage = () => {
         </Grid.Item>
 
         {/* MAIN CONTENT */}
-        <Grid.Item col={2}>
+        <Grid.Item
+          col={2}
+          css={{
+            '@sm': {
+              gridColumn: '1',
+            },
+          }}
+        >
           <Flex
             alignItems="start"
             direction="column"
