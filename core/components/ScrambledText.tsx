@@ -84,7 +84,17 @@ const ScrambledTextAnimation = ({
 
   if (!dimensions) {
     return (
-      <Box ref={measureRef} {...rest} css={{ ...css, opacity: 0 }}>
+      <Box
+        ref={measureRef}
+        {...rest}
+        css={{
+          ...css,
+          opacity: 0,
+          position: 'absolute',
+          visibility: 'hidden',
+          pointerEvents: 'none',
+        }}
+      >
         <Text ref={measureRef} {...rest}>
           {children}
         </Text>
@@ -100,6 +110,7 @@ const ScrambledTextAnimation = ({
       style={{
         display: 'inline-block',
         height: finished ? 'auto' : dimensions?.height,
+        maxWidth: '100%',
       }}
     >
       <Text
