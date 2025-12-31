@@ -396,7 +396,7 @@ const OfferingsPage = () => {
             variant="tertiary"
             windowSize={3}
           >
-            Audio-reactive visuals • Sonic branding • Creative tech
+            Audio-reactive visuals • Sonic branding
           </ScrambledText>
 
           {/* INTRO PARAGRAPH - New addition */}
