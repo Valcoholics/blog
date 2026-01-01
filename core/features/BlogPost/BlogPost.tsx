@@ -16,6 +16,7 @@ import { Dock } from '@core/components/Dock';
 import { DynamicTOC } from '@core/components/DynamicTOC';
 import Footer from '@core/components/Footer/Footer';
 import { Main } from '@core/components/Main';
+import NewsletterForm from '@core/components/NewsletterForm';
 import { ScrambledText } from '@core/components/ScrambledText';
 import Seo from '@core/components/Seo';
 
@@ -297,6 +298,9 @@ const BlogPost = ({ children, frontMatter, ogImage }: Props) => {
           >
             {children}
           </Flex>
+        </Grid.Item>
+        <Grid.Item col={2} justifySelf="center" css={{ width: '100%', maxWidth: 700, paddingTop: 'var(--space-8)' }}>
+          <NewsletterForm />
         </Grid.Item>
       </Grid>
       <Footnote title={title} url={postUrl} />
