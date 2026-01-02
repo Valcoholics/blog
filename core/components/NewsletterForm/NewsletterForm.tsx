@@ -93,11 +93,7 @@ const NewsletterForm = (props: Props) => {
               }}
               variant="secondary"
             >
-              Subscribe to{' '}
-              <Anchor underline href="https://buttondown.email/MaximeHeckel">
-                my newsletter
-              </Anchor>{' '}
-              to receive a monthly digest containing:
+              Subscribe to my newsletter to receive a monthly digest containing:
             </Text>
             <List variant="unordered">
               <List.Item>
@@ -195,21 +191,11 @@ const NewsletterForm = (props: Props) => {
         {error ? (
           error.message.includes('already subscribed') ? (
             <ErrorMessage>
-              Looks like you already subscribed! If you think this is a mistake
-              you can still subscribe by heading directly to my{' '}
-              <Anchor href="https://substack.com/@dataval?utm_campaign=profile&utm_medium=profile-page" underline>
-                Substack publication
-              </Anchor>
-              .
+              Looks like you&apos;re already subscribed! Check your inbox for updates.
             </ErrorMessage>
           ) : (
             <ErrorMessage>
-              😬 woops! We just hit a snag here, but don&apos;t worry! You can
-              still subscribe by heading directly to my{' '}
-              <Anchor href="https://substack.com/@dataval?utm_campaign=profile&utm_medium=profile-page" underline>
-                Substack publication
-              </Anchor>
-              .
+              😬 Oops! Something went wrong. Please try again in a moment.
             </ErrorMessage>
           )
         ) : null}
