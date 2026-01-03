@@ -225,7 +225,7 @@ const PricingQuickView = () => (
         Sonic Branding
       </Text>
       <Text weight="4" variant="primary" css={{ fontSize: '20px' }}>
-        From $800
+        Coming Soon
       </Text>
     </Flex>
     <Flex direction="column" gap="1" css={{ flex: '1 1 120px' }}>
@@ -453,7 +453,7 @@ const OfferingsPage = () => {
 
                 {/* CREATIVE CONSULTING */}
                 <AccordionCard
-                  title="Creative Consulting (1-on-1)"
+                  title="Creative Consulting (1-on-1) - FREE CONSULTATIONS JAN 2026"
                   badge="Popular"
                   variant="featured"
                   defaultExpanded={true}

@@ -61,7 +61,7 @@ const NewHome = (props: Props) => {
         <IndexSection />
         <ArticlesSection posts={posts} />
         <Grid.Item col={2} justifySelf="center" css={{ width: '100%', maxWidth: '700px', paddingTop: 'var(--space-8)', paddingBottom: 'var(--space-8)' }}>
-          <NewsletterForm large />
+          <NewsletterForm />
         </Grid.Item>
       </Grid>
       <BottomBlurGradientMask />

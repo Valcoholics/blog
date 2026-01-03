@@ -1,0 +1,258 @@
+---
+title: 'Genuary Day 2: Squash & Stretch in GLSL'
+subtitle: Implementing Animation Principles with Audio-Reactive Shaders
+date: '2026-01-02T08:00:00.000Z'
+updated: '2026-01-02T08:00:00.000Z'
+categories: ['creative-coding', 'generative-art', 'audio-reactive']
+keywords:
+  [
+    'genuary',
+    'animation principles',
+    'creative coding',
+    'generative art',
+    'audio visualization',
+    'raymarching',
+    'shaders',
+    'glsl',
+  ]
+slug: genuary-2026-day-2
+type: 'blogPost'
+featured: true
+colorFeatured: '#FF6B9D'
+coverImage: '/static/images/genuary-day-2-cover.png'
+---
+
+Day 2 of [Genuary 2026][genuary] challenges us to explore the [twelve principles of animation][twelve-principles]—foundational techniques developed by Disney animators Ollie Johnston and Frank Thomas. I focused on two principles that translate beautifully to shader code: **squash & stretch** and **exaggeration**.
+
+<iframe
+  width="100%"
+  height="600"
+  src="/static/genuary-day-2/index.html"
+  title="Audio Reactive Morphing Blob"
+  frameBorder="0"
+  style={{ borderRadius: '8px', marginBottom: '2rem' }}
+></iframe>
+
+_Click "Load Demo Track" to see the blob react to music, or upload your own audio file._
+
+## Squash & Stretch in Raymarching
+
+Traditional animation uses squash and stretch to give objects weight and flexibility. A bouncing ball compresses when it hits the ground, stretches as it launches upward. This deformation conveys mass and energy.
+
+In GLSL, I implemented this using signed distance fields (SDFs) and audio-driven deformation.
+
+### The Core SDF
+
+The base shape is a sphere, but its radius is modulated by audio:
+
+```glsl title="Audio-driven sphere scaling"
+float sdSphere(vec3 p, float r) {
+    return length(p) - r;
+}
+
+float scene(vec3 p) {
+    vec3 warped = warp(p);
+    float radius = 1.0 + u_volume * 0.12 + u_bass * 0.08;
+    float blob = sdSphere(warped, radius);
+    return blob;
+}
+```
+
+- `u_volume` controls overall size (average of bass/mid/high)
+- `u_bass` adds extra expansion when low frequencies hit
+
+This creates **squash & stretch**—the blob literally grows and shrinks with sound energy. Watch how the radius changes with audio intensity in the demo above.
+
+### Warping for Organic Deformation
+
+But uniform scaling isn't enough. Real squash and stretch isn't perfectly symmetrical. Objects deform directionally based on force.
+
+I added multi-layered warping that distorts space itself:
+
+```glsl title="Three-layer spatial warping"
+vec3 warp(vec3 p) {
+    float warpAmp = 0.3 + u_bass * 0.15;
+    float warpSpeed = 0.5 + u_high * 0.3;
+
+    // Primary noise-based warp (bass-driven amplitude)
+    p += warpAmp * vec3(
+        noise(p * 2.0 + u_time * warpSpeed),
+        noise(p * 2.0 + u_time * warpSpeed + 10.0),
+        noise(p * 2.0 + u_time * warpSpeed + 20.0)
+    );
+
+    // Secondary cosine warp (mid-driven)
+    float midWarp = 0.15 + u_mid * 0.08;
+    p += midWarp * cos(3.0 * p.yzx + u_time);
+
+    // Tertiary detail warp (high-driven)
+    float highWarp = 0.08 + u_high * 0.05;
+    p += highWarp * cos(7.0 * p.zxy + u_time * 1.3);
+
+    return p;
+}
+```
+
+This function takes a 3D point and distorts it through three layers:
+
+1. **Noise-based warp** — Creates organic, flowing deformation controlled by bass amplitude and high-frequency speed
+2. **Cosine warp** — Adds rolling waves driven by mids
+3. **Detail warp** — Surface-level distortion from highs
+
+Each layer responds to different audio frequencies at different scales. Bass creates large, sweeping deformations. Highs add fine detail. Together, they make the blob feel like it's breathing, pulsing, reacting.
+
+This is squash & stretch applied to 3D space. Instead of deforming a mesh, we're deforming the raymarching function itself.
+
+## Exaggeration
+
+The second principle is **exaggeration**—pushing reality for dramatic effect. Animation isn't a 1:1 copy of physics. It's an amplified, stylized interpretation.
+
+In my shader, audio data is intentionally exaggerated:
+
+```glsl title="Amplified audio response"
+float warpAmp = 0.3 + u_bass * 0.15;  // Bass gets amplified
+float radius = 1.0 + u_volume * 0.12 + u_bass * 0.08;  // Double influence of bass
+```
+
+Bass doesn't just control the warp—it controls both the warp amplitude AND the radius. This creates compounding visual impact.
+
+The fresnel shine is also exaggerated based on volume:
+
+```glsl title="Dynamic shine intensity"
+float shineIntensity = 0.25 + u_volume * 0.35 + u_high * 0.15;
+col += fresnel * shineIntensity * mix(vec3(1.0), palette(u_time * 0.1), u_volume);
+```
+
+At low volumes, the shine is subtle. As audio energy increases, it intensifies dramatically. This isn't realistic lighting—it's expressive lighting.
+
+## The Three-Tier Color System
+
+To further exaggerate the visual response, color shifts based on volume intensity. This creates three distinct emotional states:
+
+### Tier 1: White Iridescent (0-0.25 volume)
+
+```glsl title="Pearlescent white with subtle shimmer"
+vec3 whiteIridescent = vec3(0.92, 0.92, 0.95) + 0.08 * cos(6.28318 * (t + vec3(0.0, 0.33, 0.67)));
+```
+
+During quiet moments, the blob is pearlescent white with subtle rainbow shimmer. Calm. Waiting.
+
+### Tier 2: Soft Bloom (0.25-0.5 volume)
+
+```glsl title="Pastel color emergence"
+vec3 a2 = vec3(0.7, 0.7, 0.75);
+vec3 b2 = vec3(0.3, 0.3, 0.3);
+vec3 c2 = vec3(1.0, 1.0, 1.0);
+vec3 d2 = vec3(0.0 + u_bass * 0.1, 0.33 + u_mid * 0.08, 0.67 + u_high * 0.1);
+vec3 bloomColors = a2 + b2 * cos(6.28318 * (c2 * t + d2));
+```
+
+As sound builds, pastel colors emerge. The palette begins to respond to audio frequencies but remains gentle.
+
+### Tier 3: Full Saturation (0.5+ volume)
+
+```glsl title="Vibrant saturated colors"
+vec3 d3 = vec3(0.0 + u_bass * 0.15, 0.33 + u_mid * 0.1, 0.67 + u_high * 0.15);
+vec3 fullSaturated = vec3(0.5) + vec3(0.5) * cos(6.28318 * (t + d3));
+```
+
+At high volumes, colors fully saturate and shift dramatically with bass, mids, and highs. The blob becomes vibrant, energetic, alive.
+
+### Smooth Transitions
+
+The transitions use `smoothstep` for smooth blending between tiers:
+
+```glsl title="Blending color tiers"
+float t1 = smoothstep(0.0, 0.3, vol);   // white -> bloom
+float t2 = smoothstep(0.3, 0.6, vol);   // bloom -> saturated
+
+vec3 col = mix(whiteIridescent, bloomColors, t1);
+col = mix(col, fullSaturated, t2);
+```
+
+This creates **exaggerated emotional progression** through color. The visual mood shifts with audio energy, amplifying the feeling beyond what the sound alone conveys. Load the demo track above and watch how the colors evolve through quiet and intense sections.
+
+## Raymarching Implementation
+
+The piece uses raymarching to render the blob in real-time:
+
+```glsl title="Main raymarching loop"
+vec4 raymarch(vec3 ro, vec3 rd) {
+    float t = 0.0;
+
+    for(int i = 0; i < 80; i++) {
+        vec3 p = ro + rd * t;
+        float d = scene(p);
+
+        if(d < 0.001) {
+            vec3 normal = getNormal(p);
+
+            float fresnelPow = 2.0 - u_volume * 0.18;
+            float fresnel = pow(1.0 - max(0.0, dot(normal, -rd)), fresnelPow);
+
+            float colorSpeed = 0.1 + u_mid * 0.1;
+            vec3 col = palette(fresnel + t * 0.1 + u_time * colorSpeed);
+
+            float shineIntensity = 0.25 + u_volume * 0.35 + u_high * 0.15;
+            col += fresnel * shineIntensity * mix(vec3(1.0), palette(u_time * 0.1), u_volume);
+
+            return vec4(col, 1.0);
+        }
+
+        if(t > 10.0) break;
+        t += d;
+    }
+
+    float bgPulse = 0.02 + u_bass * 0.012;
+    return vec4(bgPulse, bgPulse, bgPulse + 0.03, 1.0);
+}
+```
+
+This marches a ray through the scene, checking the signed distance at each step. When it hits the surface (distance < 0.001), it calculates:
+- Surface normal
+- Fresnel effect (edge glow)
+- Color based on time and fresnel
+- Shine intensity
+
+Even the background subtly pulses with bass. Every element is exaggerated for maximum visual impact.
+
+## Audio Analysis
+
+The Web Audio API's `AnalyserNode` provides FFT data in real-time:
+
+```javascript title="Frequency band extraction"
+// Split spectrum into three bands
+for (let i = 0; i < 10; i++) bass += dataArray[i];
+for (let i = 10; i < 50; i++) mid += dataArray[i];
+for (let i = 50; i < bufferLength; i++) high += dataArray[i];
+
+// Smooth for natural easing
+smoothBass = smoothBass * 0.92 + bass * 0.08;
+smoothMid = smoothMid * 0.92 + mid * 0.08;
+smoothHigh = smoothHigh * 0.92 + high * 0.08;
+```
+
+Smoothing with a factor of 0.92 creates trailing, cascading motion. Bass changes linger longer than highs. This implements another animation principle: **follow-through**—different parts move at different rates.
+
+## Try It Yourself
+
+Experiment with different music genres using the demo at the top:
+
+- **Classical**: Watch the blob breathe with dynamics
+- **Electronic/bass music**: See extreme squash & stretch
+- **Jazz**: Notice mid-driven color cycling
+- **Ambient**: Experience the white iridescent tier
+
+The same GLSL interprets different music in completely different ways.
+
+## Genuary 2026
+
+This is day 2 of 31. Follow along with `#genuary` and `#genuary2026`.
+
+Find all prompts at [genuary.art][genuary].
+
+---
+
+{/* Links */}
+[genuary]: https://genuary.art/
+[twelve-principles]: https://en.wikipedia.org/wiki/Twelve_basic_principles_of_animation

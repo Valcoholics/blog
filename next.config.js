@@ -80,12 +80,12 @@ export default output;
 const ContentSecurityPolicy = `
     default-src 'self';
     object-src 'self' data:;
-    script-src 'self' 'unsafe-eval' 'unsafe-inline' *.youtube.com *.twitter.com *.vimeo.com player.vimeo.com *.vercel-scripts.com;
-    child-src *.youtube.com *.google.com *.twitter.com *.vimeo.com player.vimeo.com *.codesandbox.io;
-    frame-src *.youtube.com *.google.com *.twitter.com *.vimeo.com player.vimeo.com *.codesandbox.io;
+    script-src 'self' 'unsafe-eval' 'unsafe-inline' *.youtube.com *.twitter.com *.vimeo.com player.vimeo.com *.vercel-scripts.com cdnjs.cloudflare.com;
+    child-src 'self' *.youtube.com *.google.com *.twitter.com *.vimeo.com player.vimeo.com *.codesandbox.io;
+    frame-src 'self' *.youtube.com *.google.com *.twitter.com *.vimeo.com player.vimeo.com *.codesandbox.io;
     style-src 'self' 'unsafe-inline' *.googleapis.com;
     img-src * blob: data:;
-    media-src 'self' https://d2xl4m2ghaywko.cloudfront.net https://video.twimg.com;
+    media-src 'self' https://d2xl4m2ghaywko.cloudfront.net https://video.twimg.com blob:;
     connect-src *;
     font-src 'self';
 `;
@@ -104,7 +104,7 @@ const securityHeaders = [
   // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options
   {
     key: 'X-Frame-Options',
-    value: 'DENY',
+    value: 'SAMEORIGIN',
   },
   // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Content-Type-Options
   {

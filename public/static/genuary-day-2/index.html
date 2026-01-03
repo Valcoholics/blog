@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Audio Reactive Morphing Blob</title>
+    <style>
+        * { margin: 0; padding: 0; user-select: none; }
+        body {
+            background: #000;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+        }
+        canvas { display: block; }
+
+        #controls {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            z-index: 50;
+        }
+
+        #uploadLabel {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #fff;
+            padding: 12px 24px;
+            font-family: system-ui, -apple-system, sans-serif;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        #uploadLabel:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        #playbackControls {
+            display: none;
+            align-items: center;
+            gap: 12px;
+        }
+
+        #playPauseBtn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #fff;
+            padding: 10px 20px;
+            font-family: system-ui, -apple-system, sans-serif;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background 0.2s;
+            font-size: 16px;
+        }
+
+        #playPauseBtn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        #seekBar {
+            width: 200px;
+            height: 4px;
+            -webkit-appearance: none;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        #seekBar::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            background: #fff;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        #seekBar::-moz-range-thumb {
+            width: 12px;
+            height: 12px;
+            background: #fff;
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+        }
+
+        #timeDisplay {
+            color: #888;
+            font-family: system-ui, -apple-system, sans-serif;
+            font-size: 12px;
+            min-width: 80px;
+        }
+
+        #trackName {
+            color: #fff;
+            font-family: system-ui, -apple-system, sans-serif;
+            font-size: 14px;
+            max-width: 300px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        #levelMeter {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            display: flex;
+            gap: 8px;
+            align-items: flex-end;
+            height: 60px;
+            z-index: 50;
+        }
+
+        .level-bar {
+            width: 20px;
+            background: linear-gradient(to top, #4a9eff, #ff4a9e);
+            border-radius: 2px;
+            transition: height 0.05s ease;
+        }
+
+        .level-label {
+            color: #666;
+            font-family: system-ui, -apple-system, sans-serif;
+            font-size: 10px;
+            text-align: center;
+            margin-top: 4px;
+        }
+
+        .level-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #loadDemoBtn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div id="controls">
+        <div style="display: flex; gap: 12px;">
+            <label id="uploadLabel" for="fileInput">
+                🎵 Upload Audio File
+            </label>
+            <button id="loadDemoBtn" style="background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.3); color: #fff; padding: 12px 24px; font-family: system-ui, -apple-system, sans-serif; cursor: pointer; border-radius: 4px; transition: background 0.2s;">
+                ▶️ Load Demo Track
+            </button>
+        </div>
+        <input type="file" id="fileInput" accept="audio/*">
+
+        <div id="playbackControls">
+            <span id="trackName"></span>
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <button id="playPauseBtn">▶️</button>
+                <input type="range" id="seekBar" min="0" max="100" value="0">
+                <span id="timeDisplay">0:00 / 0:00</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="levelMeter">
+        <div class="level-container">
+            <div class="level-bar" id="bassBar"></div>
+            <span class="level-label">Bass</span>
+        </div>
+        <div class="level-container">
+            <div class="level-bar" id="midBar"></div>
+            <span class="level-label">Mid</span>
+        </div>
+        <div class="level-container">
+            <div class="level-bar" id="highBar"></div>
+            <span class="level-label">High</span>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <script id="vertex" type="x-shader/x-vertex">
+        void main() {
+            gl_Position = vec4(position, 1.0);
+        }
+    </script>
+
+    <script id="fragment" type="x-shader/x-fragment">
+        precision highp float;
+
+        uniform vec2 u_resolution;
+        uniform float u_time;
+
+        // Audio uniforms
+        uniform float u_bass;
+        uniform float u_mid;
+        uniform float u_high;
+        uniform float u_volume;
+
+        // Original fully saturated IQ palette
+        vec3 paletteSaturated(float t) {
+            vec3 a = vec3(0.5, 0.5, 0.5);
+            vec3 b = vec3(0.5, 0.5, 0.5);
+            vec3 c = vec3(1.0, 1.0, 1.0);
+            vec3 d = vec3(0.0, 0.33, 0.67);
+            return a + b * cos(6.28318 * (c * t + d));
+        }
+
+        // 3-tier color system based on volume
+        vec3 palette(float t) {
+            // Tier 1: White iridescent (volume 0-0.25)
+            vec3 whiteIridescent = vec3(0.92, 0.92, 0.95) + 0.08 * cos(6.28318 * (t + vec3(0.0, 0.33, 0.67)));
+
+            // Tier 2: Soft bloom colors (volume 0.25-0.5)
+            vec3 a2 = vec3(0.7, 0.7, 0.75);
+            vec3 b2 = vec3(0.3, 0.3, 0.3);
+            vec3 c2 = vec3(1.0, 1.0, 1.0);
+            vec3 d2 = vec3(0.0 + u_bass * 0.1, 0.33 + u_mid * 0.08, 0.67 + u_high * 0.1);
+            vec3 bloomColors = a2 + b2 * cos(6.28318 * (c2 * t + d2));
+
+            // Tier 3: Full saturated (volume 0.5+)
+            vec3 d3 = vec3(0.0 + u_bass * 0.15, 0.33 + u_mid * 0.1, 0.67 + u_high * 0.15);
+            vec3 fullSaturated = vec3(0.5) + vec3(0.5) * cos(6.28318 * (t + d3));
+
+            // Blend between tiers based on volume
+            float vol = u_volume;
+
+            // 0 to 0.25: white iridescent
+            // 0.25 to 0.5: blend to bloom
+            // 0.5 to 1.0: blend to full saturated
+
+            float t1 = smoothstep(0.0, 0.3, vol);   // white -> bloom transition
+            float t2 = smoothstep(0.3, 0.6, vol);   // bloom -> saturated transition
+
+            vec3 col = mix(whiteIridescent, bloomColors, t1);
+            col = mix(col, fullSaturated, t2);
+
+            return col;
+        }
+
+        float hash(vec3 p) {
+            p = fract(p * 0.3183099 + 0.1);
+            p *= 17.0;
+            return fract(p.x * p.y * p.z * (p.x + p.y + p.z));
+        }
+
+        float noise(vec3 x) {
+            vec3 p = floor(x);
+            vec3 f = fract(x);
+            f = f * f * (3.0 - 2.0 * f);
+
+            return mix(
+                mix(mix(hash(p + vec3(0,0,0)), hash(p + vec3(1,0,0)), f.x),
+                    mix(hash(p + vec3(0,1,0)), hash(p + vec3(1,1,0)), f.x), f.y),
+                mix(mix(hash(p + vec3(0,0,1)), hash(p + vec3(1,0,1)), f.x),
+                    mix(hash(p + vec3(0,1,1)), hash(p + vec3(1,1,1)), f.x), f.y),
+                f.z);
+        }
+
+        float sdSphere(vec3 p, float r) {
+            return length(p) - r;
+        }
+
+        vec3 warp(vec3 p) {
+            float warpAmp = 0.3 + u_bass * 0.15;
+            float warpSpeed = 0.5 + u_high * 0.3;
+
+            p += warpAmp * vec3(
+                noise(p * 2.0 + u_time * warpSpeed),
+                noise(p * 2.0 + u_time * warpSpeed + 10.0),
+                noise(p * 2.0 + u_time * warpSpeed + 20.0)
+            );
+
+            float midWarp = 0.15 + u_mid * 0.08;
+            p += midWarp * cos(3.0 * p.yzx + u_time);
+
+            float highWarp = 0.08 + u_high * 0.05;
+            p += highWarp * cos(7.0 * p.zxy + u_time * 1.3);
+
+            return p;
+        }
+
+        float scene(vec3 p) {
+            vec3 warped = warp(p);
+            float radius = 1.0 + u_volume * 0.12 + u_bass * 0.08;
+            float blob = sdSphere(warped, radius);
+            return blob;
+        }
+
+        vec3 getNormal(vec3 p) {
+            const vec2 e = vec2(0.001, 0.0);
+            return normalize(vec3(
+                scene(p + e.xyy) - scene(p - e.xyy),
+                scene(p + e.yxy) - scene(p - e.yxy),
+                scene(p + e.yyx) - scene(p - e.yyx)
+            ));
+        }
+
+        vec4 raymarch(vec3 ro, vec3 rd) {
+            float t = 0.0;
+
+            for(int i = 0; i < 80; i++) {
+                vec3 p = ro + rd * t;
+                float d = scene(p);
+
+                if(d < 0.001) {
+                    vec3 normal = getNormal(p);
+
+                    float fresnelPow = 2.0 - u_volume * 0.18;
+                    float fresnel = pow(1.0 - max(0.0, dot(normal, -rd)), fresnelPow);
+
+                    float colorSpeed = 0.1 + u_mid * 0.1;
+                    vec3 col = palette(fresnel + t * 0.1 + u_time * colorSpeed);
+
+                    // Fresnel shine - more pearly when quiet, more intense when loud
+                    float shineIntensity = 0.25 + u_volume * 0.35 + u_high * 0.15;
+                    col += fresnel * shineIntensity * mix(vec3(1.0), palette(u_time * 0.1), u_volume);
+
+                    return vec4(col, 1.0);
+                }
+
+                if(t > 10.0) break;
+                t += d;
+            }
+
+            float bgPulse = 0.02 + u_bass * 0.012;
+            return vec4(bgPulse, bgPulse, bgPulse + 0.03, 1.0);
+        }
+
+        void main() {
+            vec2 uv = (gl_FragCoord.xy - u_resolution * 0.5) / u_resolution.y;
+
+            float camDist = 3.0 - u_volume * 0.18;
+            vec3 ro = vec3(0.0, 0.0, camDist);
+            vec3 rd = normalize(vec3(uv, -1.0));
+
+            float rotSpeed = 0.3 + u_mid * 0.06;
+            float angle = u_time * rotSpeed;
+
+            ro.xz = vec2(
+                ro.x * cos(angle) - ro.z * sin(angle),
+                ro.x * sin(angle) + ro.z * cos(angle)
+            );
+            rd.xz = vec2(
+                rd.x * cos(angle) - rd.z * sin(angle),
+                rd.x * sin(angle) + rd.z * cos(angle)
+            );
+
+            gl_FragColor = raymarch(ro, rd);
+        }
+    </script>
+
+    <script>
+        let camera, scene, renderer, clock, uniforms;
+        let audioContext, analyser, audioSource;
+        let audioElement;
+        let dataArray, bufferLength;
+        let isPlaying = false;
+
+        // Smoothed audio values
+        let smoothBass = 0, smoothMid = 0, smoothHigh = 0, smoothVolume = 0;
+        const smoothing = 0.92;
+
+        function init() {
+            clock = new THREE.Clock();
+            camera = new THREE.Camera();
+            camera.position.z = 1;
+
+            scene = new THREE.Scene();
+
+            const geometry = new THREE.PlaneBufferGeometry(2, 2);
+
+            uniforms = {
+                u_time: { type: "f", value: 0.0 },
+                u_resolution: { type: "v2", value: new THREE.Vector2() },
+                u_bass: { type: "f", value: 0.0 },
+                u_mid: { type: "f", value: 0.0 },
+                u_high: { type: "f", value: 0.0 },
+                u_volume: { type: "f", value: 0.0 }
+            };
+
+            const material = new THREE.ShaderMaterial({
+                uniforms: uniforms,
+                vertexShader: document.getElementById("vertex").textContent,
+                fragmentShader: document.getElementById("fragment").textContent
+            });
+
+            const mesh = new THREE.Mesh(geometry, material);
+            scene.add(mesh);
+
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setPixelRatio(window.devicePixelRatio);
+            document.body.appendChild(renderer.domElement);
+
+            onWindowResize();
+            window.addEventListener("resize", onWindowResize);
+
+            document.getElementById("fileInput").addEventListener("change", handleFileUpload);
+            document.getElementById("playPauseBtn").addEventListener("click", togglePlayPause);
+            document.getElementById("seekBar").addEventListener("input", handleSeek);
+            document.getElementById("loadDemoBtn").addEventListener("click", loadDemoTrack);
+        }
+
+        function handleFileUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                analyser = audioContext.createAnalyser();
+                analyser.fftSize = 256;
+                analyser.smoothingTimeConstant = 0.8;
+                bufferLength = analyser.frequencyBinCount;
+                dataArray = new Uint8Array(bufferLength);
+            }
+
+            if (audioElement) {
+                audioElement.pause();
+                audioElement.currentTime = 0;
+                audioElement.src = URL.createObjectURL(file);
+            } else {
+                audioElement = new Audio();
+                audioElement.src = URL.createObjectURL(file);
+
+                audioSource = audioContext.createMediaElementSource(audioElement);
+                audioSource.connect(analyser);
+                analyser.connect(audioContext.destination);
+
+                audioElement.addEventListener("loadedmetadata", () => {
+                    document.getElementById("seekBar").max = audioElement.duration;
+                    updateTimeDisplay();
+                });
+
+                audioElement.addEventListener("timeupdate", () => {
+                    document.getElementById("seekBar").value = audioElement.currentTime;
+                    updateTimeDisplay();
+                });
+
+                audioElement.addEventListener("ended", () => {
+                    isPlaying = false;
+                    document.getElementById("playPauseBtn").textContent = "▶️";
+                });
+            }
+
+            document.getElementById("trackName").textContent = file.name;
+            document.getElementById("playbackControls").style.display = "flex";
+            document.getElementById("uploadLabel").textContent = "🎵 Change Track";
+
+            audioElement.play().catch(err => {
+                console.error('Play failed:', err);
+                audioContext.resume();
+                audioElement.play();
+            });
+            isPlaying = true;
+            document.getElementById("playPauseBtn").textContent = "⏸️";
+        }
+
+        function loadDemoTrack() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                analyser = audioContext.createAnalyser();
+                analyser.fftSize = 256;
+                analyser.smoothingTimeConstant = 0.8;
+                bufferLength = analyser.frequencyBinCount;
+                dataArray = new Uint8Array(bufferLength);
+            }
+
+            if (audioElement) {
+                audioElement.pause();
+                audioElement.currentTime = 0;
+                audioElement.src = './default-track.mp3';
+            } else {
+                audioElement = new Audio('./default-track.mp3');
+
+                audioSource = audioContext.createMediaElementSource(audioElement);
+                audioSource.connect(analyser);
+                analyser.connect(audioContext.destination);
+
+                audioElement.addEventListener("loadedmetadata", () => {
+                    document.getElementById("seekBar").max = audioElement.duration;
+                    updateTimeDisplay();
+                });
+
+                audioElement.addEventListener("timeupdate", () => {
+                    document.getElementById("seekBar").value = audioElement.currentTime;
+                    updateTimeDisplay();
+                });
+
+                audioElement.addEventListener("ended", () => {
+                    isPlaying = false;
+                    document.getElementById("playPauseBtn").textContent = "▶️";
+                });
+            }
+
+            document.getElementById("trackName").textContent = "Sonder - Thinking Bout Me (Suze Ocosta Edit)";
+            document.getElementById("playbackControls").style.display = "flex";
+            document.getElementById("uploadLabel").textContent = "🎵 Upload Audio File";
+
+            audioElement.play().catch(err => {
+                console.error('Play failed:', err);
+                audioContext.resume();
+                audioElement.play();
+            });
+            isPlaying = true;
+            document.getElementById("playPauseBtn").textContent = "⏸️";
+        }
+
+        function togglePlayPause() {
+            if (!audioElement) return;
+
+            if (isPlaying) {
+                audioElement.pause();
+                document.getElementById("playPauseBtn").textContent = "▶️";
+            } else {
+                audioContext.resume();
+                audioElement.play();
+                document.getElementById("playPauseBtn").textContent = "⏸️";
+            }
+            isPlaying = !isPlaying;
+        }
+
+        function handleSeek(e) {
+            if (!audioElement) return;
+            audioElement.currentTime = e.target.value;
+        }
+
+        function updateTimeDisplay() {
+            if (!audioElement) return;
+            const current = formatTime(audioElement.currentTime);
+            const total = formatTime(audioElement.duration);
+            document.getElementById("timeDisplay").textContent = `${current} / ${total}`;
+        }
+
+        function formatTime(seconds) {
+            if (isNaN(seconds)) return "0:00";
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60).toString().padStart(2, "0");
+            return `${mins}:${secs}`;
+        }
+
+        function getAudioData() {
+            if (!analyser || !isPlaying) {
+                smoothBass *= 0.95;
+                smoothMid *= 0.95;
+                smoothHigh *= 0.95;
+                smoothVolume *= 0.95;
+                updateLevelMeter();
+                return;
+            }
+
+            analyser.getByteFrequencyData(dataArray);
+
+            let bass = 0, mid = 0, high = 0;
+
+            for (let i = 0; i < 10; i++) {
+                bass += dataArray[i];
+            }
+            bass = (bass / 10) / 255;
+
+            for (let i = 10; i < 50; i++) {
+                mid += dataArray[i];
+            }
+            mid = (mid / 40) / 255;
+
+            for (let i = 50; i < bufferLength; i++) {
+                high += dataArray[i];
+            }
+            high = (high / (bufferLength - 50)) / 255;
+
+            const volume = (bass + mid + high) / 3;
+
+            smoothBass = smoothBass * smoothing + bass * (1 - smoothing);
+            smoothMid = smoothMid * smoothing + mid * (1 - smoothing);
+            smoothHigh = smoothHigh * smoothing + high * (1 - smoothing);
+            smoothVolume = smoothVolume * smoothing + volume * (1 - smoothing);
+
+            updateLevelMeter();
+        }
+
+        function updateLevelMeter() {
+            document.getElementById("bassBar").style.height = (smoothBass * 60) + "px";
+            document.getElementById("midBar").style.height = (smoothMid * 60) + "px";
+            document.getElementById("highBar").style.height = (smoothHigh * 60) + "px";
+        }
+
+        function onWindowResize() {
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            uniforms.u_resolution.value.x = renderer.domElement.width;
+            uniforms.u_resolution.value.y = renderer.domElement.height;
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            getAudioData();
+
+            uniforms.u_time.value = clock.getElapsedTime();
+            uniforms.u_bass.value = smoothBass;
+            uniforms.u_mid.value = smoothMid;
+            uniforms.u_high.value = smoothHigh;
+            uniforms.u_volume.value = smoothVolume;
+
+            renderer.render(scene, camera);
+        }
+
+        init();
+        animate();
+    </script>
+</body>
+</html>
