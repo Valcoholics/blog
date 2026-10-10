@@ -36,6 +36,10 @@ export const getFileBySlug = async (slug: string): Promise<FrontMatterPost> => {
   const content = parsedFile.content;
 
   const options = {
+    // Only repository-authored MDX reaches this compiler. Preserve layout props
+    // while keeping the patched compiler's dangerous-expression checks enabled.
+    blockJS: false,
+    blockDangerousJS: true,
     mdxOptions: {
       rehypePlugins: [
         rehypeSlug,
