@@ -13,10 +13,15 @@ export default async function handler(
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { email } = req.body;
+  const email =
+    typeof req.body?.email === 'string' ? req.body.email.trim() : '';
 
-  if (!email || !email.length) {
+  if (!email) {
     return res.status(400).json({ error: 'Email is required' });
+  }
+
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return res.status(400).json({ error: 'A valid email address is required' });
   }
 
   const API_KEY = process.env.MAILCHIMP_API_KEY;
@@ -40,22 +45,31 @@ export default async function handler(
       },
       body: JSON.stringify({
         email_address: email,
-        status: 'subscribed',
+        status: 'pending',
       }),
     });
 
     const data = await response.json();
 
-    if (response.status >= 400) {
+    if (!response.ok) {
       // Check if user is already subscribed
-      if (data.title === 'Member Exists') {
+      if (data?.title === 'Member Exists') {
         return res.status(400).json({
           error: 'You are already subscribed to this newsletter',
         });
       }
 
       return res.status(400).json({
-        error: data.detail || 'There was an error subscribing to the newsletter',
+        error:
+          typeof data?.detail === 'string'
+            ? data.detail
+            : 'There was an error subscribing to the newsletter',
+      });
+    }
+
+    if (data?.status !== 'pending') {
+      return res.status(502).json({
+        error: 'The newsletter confirmation request could not be verified',
       });
     }
 

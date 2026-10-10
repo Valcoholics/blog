@@ -18,6 +18,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useIsMobile } from '@core/hooks/useIsMobile';
 
 import { MiniProgressCircular } from './MiniProgressCircular';
+import { GroupedTOC, OutlineEntry } from './GroupedTOC';
 import { useIntersectionObserver } from './useIntersectionObserver';
 
 const ToC = (props: {
@@ -145,11 +146,10 @@ const ToC = (props: {
   );
 };
 
-const DynamicTOC = (props: {
-  title: string;
-  ids: Array<{ id: string; title: string }>;
-}) => {
+const DynamicTOC = (props: { title: string; ids: OutlineEntry[] }) => {
   const { title, ids } = props;
+  const grouped = ids.some((item) => item.clips !== undefined);
+  const TitleContainer = grouped ? motion.button : motion.div;
   const ref = useRef<HTMLDivElement>(null);
   const [expanded, setExpanded] = useState(false);
 
@@ -204,11 +204,15 @@ const DynamicTOC = (props: {
   const content = useMemo(() => {
     switch (expanded) {
       case true:
-        return <ToC ids={ids} />;
+        return grouped ? (
+          <GroupedTOC entries={ids} onNavigate={() => setExpanded(false)} />
+        ) : (
+          <ToC ids={ids} />
+        );
       case false:
         return null;
     }
-  }, [expanded, ids]);
+  }, [expanded, ids, grouped]);
 
   return (
     <Box css={{ position: 'relative' }}>
@@ -219,9 +223,9 @@ const DynamicTOC = (props: {
         alignItems="start"
         justifyContent="start"
         direction="column"
-        tabIndex={0}
-        role="button"
-        aria-expanded={expanded}
+        tabIndex={grouped ? undefined : 0}
+        role={grouped ? undefined : 'button'}
+        aria-expanded={grouped ? undefined : expanded}
         css={{
           overflow: 'hidden',
           position: 'relative',
@@ -243,15 +247,29 @@ const DynamicTOC = (props: {
           '@sm': {
             maxWidth: '400px',
           },
+          ...(grouped ? {
+            '@media (max-width: 800px)': {
+              ...(expanded ? { background: 'var(--background)' } : {}),
+              '& > button': { minHeight: '32px', alignItems: 'center' },
+            },
+          } : {}),
         }}
-        onClick={() => {
-          setExpanded(!expanded);
-        }}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter') {
-            setExpanded(!expanded);
-          }
-        }}
+        onClick={
+          grouped
+            ? undefined
+            : () => {
+                setExpanded(!expanded);
+              }
+        }
+        onKeyDown={
+          grouped
+            ? undefined
+            : (e) => {
+                if (e.key === 'Enter') {
+                  setExpanded(!expanded);
+                }
+              }
+        }
         whileTap={{
           scale: expanded ? 1 : 0.9,
           borderColor: 'transparent',
@@ -283,7 +301,13 @@ const DynamicTOC = (props: {
           width: expanded ? '400px' : 'fit-content',
         }}
       >
-        <motion.div
+        <TitleContainer
+          type={grouped ? 'button' : undefined}
+          aria-expanded={grouped ? expanded : undefined}
+          aria-label={
+            grouped ? `${expanded ? 'Close' : 'Open'} post outline` : undefined
+          }
+          onClick={grouped ? () => setExpanded(!expanded) : undefined}
           layout="position"
           transition={
             shouldReduceMotion
@@ -313,6 +337,18 @@ const DynamicTOC = (props: {
             },
           }}
           style={{
+            ...(grouped
+              ? {
+                  appearance: 'none' as const,
+                  border: 0,
+                  padding: 0,
+                  background: 'transparent',
+                  color: 'inherit',
+                  font: 'inherit',
+                  textAlign: 'left' as const,
+                  cursor: 'pointer',
+                }
+              : {}),
             display: 'flex',
             alignItems: 'start',
             width: '100%',
@@ -352,7 +388,7 @@ const DynamicTOC = (props: {
           >
             <Icon.Chevron />
           </motion.div>
-        </motion.div>
+        </TitleContainer>
         <motion.div
           layout="size"
           transition={
@@ -386,45 +422,47 @@ const DynamicTOC = (props: {
           {content}
         </motion.div>
       </Flex>
-      <Box
-        aria-hidden
-        css={{
-          position: 'absolute',
-          pointerEvents: 'none',
-          display: 'flex',
-          alignItems: 'start',
-          justifyContent: 'start',
-          top: 0,
-          left: '50%',
-          transform: 'translateX(-50%)',
-          marginTop: 32,
-          width: '400px',
-          height: '200px',
-          padding: '10px 18px',
-        }}
-      >
-        {/* To remember: make this visible and make sure it aligns with the actual visible content if you need to modify it */}
-        <AnimatePresence mode="popLayout">
-          <motion.div
-            initial={{ opacity: 0 }}
-            exit="exit"
-            variants={{
-              exit: {
-                scale: shouldReduceMotion ? 1 : 0.85,
-                opacity: [1, 0],
-                filter: 'blur(5px)',
-              },
-            }}
-            transition={{
-              type: 'spring',
-              bounce: 0.4,
-            }}
-            key={expanded ? 'list' : 'title'}
-          >
-            {content}
-          </motion.div>
-        </AnimatePresence>
-      </Box>
+      {!grouped && (
+        <Box
+          aria-hidden
+          css={{
+            position: 'absolute',
+            pointerEvents: 'none',
+            display: 'flex',
+            alignItems: 'start',
+            justifyContent: 'start',
+            top: 0,
+            left: '50%',
+            transform: 'translateX(-50%)',
+            marginTop: 32,
+            width: '400px',
+            height: '200px',
+            padding: '10px 18px',
+          }}
+        >
+          {/* To remember: make this visible and make sure it aligns with the actual visible content if you need to modify it */}
+          <AnimatePresence mode="popLayout">
+            <motion.div
+              initial={{ opacity: 0 }}
+              exit="exit"
+              variants={{
+                exit: {
+                  scale: shouldReduceMotion ? 1 : 0.85,
+                  opacity: [1, 0],
+                  filter: 'blur(5px)',
+                },
+              }}
+              transition={{
+                type: 'spring',
+                bounce: 0.4,
+              }}
+              key={expanded ? 'list' : 'title'}
+            >
+              {content}
+            </motion.div>
+          </AnimatePresence>
+        </Box>
+      )}
     </Box>
   );
 };

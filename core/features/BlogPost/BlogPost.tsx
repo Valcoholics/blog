@@ -14,6 +14,7 @@ import { Post, ReadingTime } from 'types/post';
 import { BottomBlurGradientMask } from '@core/components/BottomBlurGradientMask';
 import { Dock } from '@core/components/Dock';
 import { DynamicTOC } from '@core/components/DynamicTOC';
+import type { OutlineEntry } from '@core/components/DynamicTOC/GroupedTOC';
 import Footer from '@core/components/Footer/Footer';
 import { Main } from '@core/components/Main';
 import { ScrambledText } from '@core/components/ScrambledText';
@@ -21,10 +22,7 @@ import Seo from '@core/components/Seo';
 
 import { Footnote } from './Footnote';
 
-const Header = (props: {
-  title: string;
-  ids: Array<{ id: string; title: string }>;
-}) => {
+const Header = (props: { title: string; ids: OutlineEntry[] }) => {
   const { title, ids } = props;
   const { scrollY } = useScroll();
   const [hidden, setHidden] = useState(false);
@@ -139,6 +137,8 @@ interface Props {
   children: React.ReactNode;
   frontMatter: Post & { readingTime: ReadingTime };
   ogImage: string;
+  immersive?: boolean;
+  outline?: OutlineEntry[];
 }
 
 const contentClass = css({
@@ -166,7 +166,13 @@ const contentClass = css({
   },
 });
 
-const BlogPost = ({ children, frontMatter, ogImage }: Props) => {
+const BlogPost = ({
+  children,
+  frontMatter,
+  ogImage,
+  immersive = false,
+  outline,
+}: Props) => {
   const { date, updated, slug, subtitle, title, seoTitle } = frontMatter;
   const path = `/posts/${slug}/`;
   const postUrl = `${siteConfig.url}${path}`;
@@ -176,11 +182,12 @@ const BlogPost = ({ children, frontMatter, ogImage }: Props) => {
   );
 
   useEffect(() => {
+    if (outline) return;
     /**
      * Working around some race condition quirks :) (don't judge)
      * TODO @MaximeHeckel: see if there's a better way through a remark plugin to do this
      */
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       const titles = document.querySelectorAll('h2');
       const idArrays = Array.prototype.slice
         .call(titles)
@@ -190,7 +197,8 @@ const BlogPost = ({ children, frontMatter, ogImage }: Props) => {
       }>;
       setIds(idArrays);
     }, 500);
-  }, [slug]);
+    return () => clearTimeout(timer);
+  }, [slug, outline]);
 
   return (
     <Main>
@@ -203,11 +211,11 @@ const BlogPost = ({ children, frontMatter, ogImage }: Props) => {
         date={date}
         updated={updated}
       />
-      <Header title={title} ids={ids} />
+      <Header title={title} ids={outline ?? ids} />
       <Grid
         as="article"
         css={{
-          overflowX: 'hidden',
+          overflowX: immersive ? 'clip' : 'hidden',
           position: 'relative',
           backgroundColor: 'var(--background)',
           borderBottomRightRadius: 4,
@@ -288,19 +296,25 @@ const BlogPost = ({ children, frontMatter, ogImage }: Props) => {
             </ScrambledText>
           </time>
         </Grid.Item>
-        <Grid.Item col={2}>
-          <Flex
-            alignItems="start"
-            direction="column"
-            className={contentClass()}
-            gap="5"
-          >
+        {immersive ? (
+          <Grid.Item css={{ gridColumn: '1 / -1', minWidth: 0 }}>
             {children}
-          </Flex>
-        </Grid.Item>
+          </Grid.Item>
+        ) : (
+          <Grid.Item col={2}>
+            <Flex
+              alignItems="start"
+              direction="column"
+              className={contentClass()}
+              gap="5"
+            >
+              {children}
+            </Flex>
+          </Grid.Item>
+        )}
       </Grid>
       <Footnote title={title} url={postUrl} />
-      <BottomBlurGradientMask />
+      {!immersive && <BottomBlurGradientMask />}
       <Footer lastUpdated={updated} />
     </Main>
   );

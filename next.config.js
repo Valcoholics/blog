@@ -25,7 +25,11 @@ const output = withBundleAnalyzer({
       },
     ],
   },
-  webpack(config, { isServer, buildId }) {
+  webpack(config, { isServer, buildId, dev }) {
+    if (dev && process.env.LOCAL_PREVIEW_MEMORY_CACHE === '1') {
+      config.cache = { type: 'memory' };
+    }
+
     const reactPaths = {
       react: path.join(__dirname, 'node_modules/react'),
       'react-dom': path.join(__dirname, 'node_modules/react-dom'),
@@ -85,7 +89,7 @@ const ContentSecurityPolicy = `
     frame-src 'self' *.youtube.com *.google.com *.twitter.com *.vimeo.com player.vimeo.com *.codesandbox.io;
     style-src 'self' 'unsafe-inline' *.googleapis.com;
     img-src * blob: data:;
-    media-src 'self' https://d2xl4m2ghaywko.cloudfront.net https://video.twimg.com blob:;
+    media-src 'self' https://d2xl4m2ghaywko.cloudfront.net https://video.twimg.com https://pub-556a716225174d179e339095133d37c3.r2.dev blob:;
     connect-src *;
     font-src 'self';
 `;

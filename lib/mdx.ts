@@ -1,3 +1,4 @@
+import customPosts from 'config/custom-posts';
 import fs from 'fs';
 import matter from 'gray-matter';
 import { serialize } from 'next-mdx-remote/serialize';
@@ -144,6 +145,7 @@ export const getAllFilesFrontMatter = async (): Promise<Array<Post>> => {
 
       return parsedFile.data as Post;
     })
+    .concat(customPosts)
     .sort((post1, post2) => (post1.date > post2.date ? -1 : 1));
 
   return posts;

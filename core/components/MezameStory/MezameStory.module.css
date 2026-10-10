@@ -1,0 +1,465 @@
+.story {
+  background: var(--background);
+  color: var(--text-primary);
+  width: 100%;
+}
+.opening,
+.afterword {
+  margin: 0 auto;
+  max-width: 748px;
+  padding: 2rem 24px 5rem;
+}
+.opening p,
+.afterword p,
+.readingCard p {
+  color: var(--text-secondary);
+  font-size: 1.125rem;
+  line-height: 1.75;
+  margin: 0 0 1.5rem;
+}
+.opening a,
+.afterword a {
+  color: var(--text-primary);
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+}
+.opening .readingGuide {
+  border-left: 2px solid var(--border-color);
+  font-size: 0.9375rem;
+  padding-left: 1.2rem;
+}
+.enterStory {
+  display: inline-block;
+  font: 12px var(--font-mono);
+  margin-top: 0.5rem;
+}
+.afterword {
+  padding-top: 5rem;
+}
+.skip {
+  background: var(--blue-500);
+  color: #0d100d;
+  left: 1rem;
+  padding: 0.75rem 1rem;
+  position: fixed;
+  top: -4rem;
+  z-index: 30;
+}
+.skip:focus {
+  top: 1rem;
+}
+.mediaExperience {
+  position: relative;
+}
+.stage {
+  background: #080a08;
+  color: #f1ecdf;
+  height: 100svh;
+  overflow: hidden;
+  position: sticky;
+  top: 0;
+  z-index: 0;
+}
+.stage:fullscreen {
+  height: 100%;
+  width: 100%;
+}
+.mediaFrame {
+  display: contents;
+}
+.fullscreenPrompt {
+  display: none;
+}
+.stage:fullscreen .video {
+  object-fit: contain;
+}
+.visuals {
+  inset: 0;
+  position: absolute;
+  transition: filter 0.7s ease-out, opacity 0.7s ease-out;
+}
+.visuals[data-presence='dimmed'] {
+  filter: blur(14px) brightness(0.45);
+  opacity: 0.9;
+}
+.visuals[hidden] {
+  display: none;
+}
+.video {
+  height: 100%;
+  inset: 0;
+  object-fit: cover;
+  position: absolute;
+  transition: opacity 0.5s ease;
+  width: 100%;
+}
+.loading {
+  color: rgba(241, 236, 223, 0.72);
+  font: 11px var(--font-mono);
+  left: 50%;
+  letter-spacing: 0.14em;
+  margin: 0;
+  position: absolute;
+  text-transform: uppercase;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+.stage :global(.mezame-weave-canvas) {
+  height: 100%;
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+  transition: opacity 0.3s ease;
+  width: 100%;
+  z-index: 2;
+}
+.header {
+  display: flex;
+  font: 11px/1.2 var(--font-mono);
+  justify-content: space-between;
+  letter-spacing: 0.14em;
+  padding: 1.75rem 4vw;
+  pointer-events: none;
+  position: absolute;
+  text-transform: uppercase;
+  width: 100%;
+  z-index: 12;
+}
+.header a {
+  pointer-events: auto;
+}
+.wordmark {
+  color: inherit;
+  font: 600 22px/1 var(--font-display);
+  letter-spacing: -1px;
+  text-decoration: none;
+  text-transform: none;
+}
+.wordmark span {
+  color: rgba(241, 236, 223, 0.62);
+  font: 11px var(--font-mono);
+  letter-spacing: 0.08em;
+  margin-left: 0.8rem;
+}
+.playbackTime {
+  bottom: 3rem;
+  color: rgba(241, 236, 223, 0.8);
+  font: 10px var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  position: absolute;
+  right: 4vw;
+  z-index: 12;
+}
+.durationProgress,
+.threadProgress {
+  background: rgba(241, 236, 225, 0.22);
+  height: 2px;
+  left: 4vw;
+  overflow: hidden;
+  position: absolute;
+  right: 4vw;
+  transform-origin: left;
+  z-index: 12;
+}
+.durationProgress {
+  bottom: 2.4rem;
+}
+.threadProgress {
+  bottom: 1.35rem;
+  height: 1px;
+}
+.durationProgress span,
+.threadProgress span {
+  background: var(--blue-500);
+  display: block;
+  height: 100%;
+  transform-origin: left;
+  width: 100%;
+}
+.threadProgress span {
+  background: rgba(241, 236, 223, 0.75);
+}
+.controls {
+  bottom: 4.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  position: absolute;
+  right: 4vw;
+  z-index: 15;
+}
+.controls button {
+  background: rgba(8, 10, 8, 0.72);
+  border: 1px solid rgba(241, 236, 223, 0.35);
+  color: inherit;
+  cursor: pointer;
+  font: 10px var(--font-mono);
+  letter-spacing: 0.08em;
+  padding: 0.65rem 0.8rem;
+  text-transform: uppercase;
+}
+.controls button[aria-pressed='true'],
+.controls button:hover {
+  background: color-mix(in srgb, var(--blue-500) 20%, #080a08);
+  border-color: var(--blue-500);
+}
+.controls button:focus-visible,
+.continueStory:focus-visible {
+  outline: 2px solid var(--blue-500);
+  outline-offset: 3px;
+}
+.controlMessage {
+  bottom: 7rem;
+  font: 12px var(--font-mono);
+  max-width: 24rem;
+  position: absolute;
+  right: 4vw;
+  z-index: 15;
+}
+.scrollRail {
+  margin-top: -100svh;
+  pointer-events: none;
+  position: relative;
+  z-index: 5;
+}
+.scrollRail::after {
+  content: '';
+  display: block;
+  height: 100svh;
+}
+.watchStop {
+  min-height: 100svh;
+  position: relative;
+}
+.annotation {
+  color: #fff;
+  left: 4vw;
+  max-width: 440px;
+  position: absolute;
+  text-shadow: 0 1px 8px #000;
+  top: 22svh;
+}
+.annotation h2,
+.annotationTitle {
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 400;
+  line-height: 1.15;
+  margin: 0.8rem 0;
+  scroll-margin-top: 8rem;
+}
+.annotation p {
+  margin-bottom: 1rem;
+}
+.annotation .eyebrow,
+.annotation span {
+  color: inherit;
+  font: 11px var(--font-mono);
+}
+.readingBeat {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  min-height: 100svh;
+  padding: 8rem 4vw;
+  position: relative;
+}
+.readingCard {
+  background: var(--background);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.15);
+  max-width: 590px;
+  padding: clamp(1.4rem, 3vw, 2.75rem);
+  pointer-events: auto;
+  width: 100%;
+}
+.readingCard > div:first-child {
+  margin-top: 0;
+}
+.readingCard h2 {
+  scroll-margin-top: 9rem;
+}
+.readingCard p {
+  margin: 1rem 0 0;
+}
+.handoff {
+  height: 18svh;
+}
+.continueStory {
+  background: rgba(8, 10, 8, 0.72);
+  border: 1px solid rgba(241, 236, 223, 0.35);
+  bottom: 4.25rem;
+  color: inherit;
+  cursor: pointer;
+  font: 11px var(--font-mono);
+  left: 4vw;
+  padding: 0.65rem 0.8rem;
+  position: absolute;
+  z-index: 15;
+}
+.scrollRail::-webkit-scrollbar {
+  display: none;
+}
+.marker {
+  height: 100vh;
+  pointer-events: none;
+  position: relative;
+}
+.intro,
+.outro {
+  bottom: 12vh;
+  left: 12vw;
+  max-width: 650px;
+  position: absolute;
+  text-shadow: 0 2px 22px rgba(0, 0, 0, 0.85);
+}
+.intro p,
+.outro p,
+.intro span,
+.outro span {
+  font: 11px var(--font-mono);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.intro h1 {
+  font: 400 clamp(3rem, 8vw, 7rem) / 0.95 var(--font-display);
+  letter-spacing: -0.06em;
+  margin: 1rem 0 2rem;
+  text-wrap: balance;
+}
+.outro {
+  bottom: 16vh;
+}
+.reading {
+  background: #f1ecdf;
+  color: #131713;
+  padding: 8rem max(7vw, 1.5rem);
+  position: relative;
+  z-index: 8;
+}
+.reading > * {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 700px;
+}
+.eyebrow {
+  color: color-mix(in srgb, var(--blue-500) 35%, #0d100d);
+  font: 11px var(--font-mono);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.reading h2 {
+  font: 400 clamp(2.4rem, 5vw, 5rem) / 1 var(--font-display);
+  letter-spacing: -0.05em;
+}
+.reading p:not(.eyebrow) {
+  font: 400 1.25rem/1.65 var(--font-display);
+}
+@media (max-width: 700px) {
+  .header {
+    padding: 1.25rem 1rem;
+  }
+  .header > span,
+  .wordmark span {
+    display: none;
+  }
+  .intro,
+  .outro {
+    left: 2rem;
+    right: 2rem;
+  }
+  .annotation {
+    left: 1rem;
+    right: 1rem;
+  }
+  .readingBeat {
+    padding: 8rem 1rem 10rem;
+  }
+  .readingCard p {
+    font-size: 1rem;
+  }
+}
+@media (max-width: 800px), (max-aspect-ratio: 6 / 5) {
+  .mediaFrame {
+    display: block;
+    height: min(56.25vw, calc(100svh - 14rem));
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  .visuals {
+    inset: 0;
+  }
+  .video {
+    object-fit: contain;
+  }
+  .fullscreenPrompt {
+    align-items: center;
+    background: rgba(8, 10, 8, 0.72);
+    border: 1px solid rgba(241, 236, 223, 0.4);
+    border-radius: 0;
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    font: 12px var(--font-mono);
+    gap: 0.5rem;
+    justify-content: center;
+    left: 50%;
+    min-height: 44px;
+    padding: 0.5rem 1rem;
+    position: absolute;
+    top: calc(100% + 0.75rem);
+    transform: translateX(-50%);
+    white-space: nowrap;
+    z-index: 15;
+  }
+  .fullscreenPrompt:hover {
+    background: color-mix(in srgb, var(--blue-500) 20%, #080a08);
+    border-color: var(--blue-500);
+  }
+  .fullscreenPrompt:focus-visible {
+    outline: 2px solid var(--blue-500);
+    outline-offset: 3px;
+  }
+  .controlMessage {
+    bottom: 8rem;
+    left: 1rem;
+    right: 4.5rem;
+  }
+  .continueStory {
+    bottom: calc(1.75rem + env(safe-area-inset-bottom));
+    left: 1rem;
+    min-height: 44px;
+  }
+  .playbackTime {
+    bottom: calc(5.25rem + env(safe-area-inset-bottom));
+    left: 1rem;
+    right: auto;
+  }
+  .durationProgress {
+    bottom: calc(1rem + env(safe-area-inset-bottom));
+    left: 1rem;
+    right: 1rem;
+  }
+  .threadProgress {
+    bottom: calc(0.5rem + env(safe-area-inset-bottom));
+    left: 1rem;
+    right: 1rem;
+  }
+  .stage:fullscreen .mediaFrame {
+    height: 100%;
+    inset: 0;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .video,
+  .visuals,
+  .stage :global(.mezame-weave-canvas) {
+    transition: none;
+  }
+}

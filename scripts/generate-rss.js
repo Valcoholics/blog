@@ -6,6 +6,9 @@ import path from 'path';
 import RSS from 'rss';
 import { fileURLToPath } from 'url';
 
+import customPosts from '../config/custom-posts.js';
+import siteConfig from '../config/site.js';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -17,7 +20,7 @@ const __dirname = path.dirname(__filename);
   function getPosts() {
     const files = fs
       .readdirSync(path.join(root, 'content'))
-      .filter((name) => name !== 'img');
+      .filter((name) => name.endsWith('.mdx'));
 
     const posts = files.reduce((allPosts, postSlug) => {
       const source = fs.readFileSync(
@@ -35,7 +38,7 @@ const __dirname = path.dirname(__filename);
       ];
     }, []);
 
-    return posts;
+    return [...posts, ...customPosts];
   }
 
   try {
@@ -43,9 +46,9 @@ const __dirname = path.dirname(__filename);
       title: "Valerie Andy's Blog",
       description:
         "Hi I'm Valerie Andy, and this is my blog. Home to my audio visualizer series exploring sonic identity through creative code, released every Wednesday. As a computational designer, I dive deep into the intersection of sound, code, and visual expression.",
-      site_url: 'https://www.data-v.site',
-      feed_url: 'https://www.data-v.site/rss.xml',
-      image_url: 'https://www.data-v.site/static/og/main-og-image.png',
+      site_url: siteConfig.url,
+      feed_url: `${siteConfig.url}/rss.xml`,
+      image_url: siteConfig.image,
       language: 'en',
     });
 
@@ -54,7 +57,7 @@ const __dirname = path.dirname(__filename);
     );
 
     content.forEach((post) => {
-      const url = `https://www.data-v.site/posts/${post.slug}`;
+      const url = `${siteConfig.url}/posts/${post.slug}`;
 
       feed.item({
         title: post.title,

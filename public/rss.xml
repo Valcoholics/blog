@@ -9,7 +9,7 @@
             <link>https://www.data-v.site</link>
         </image>
         <generator>RSS for Node</generator>
-        <lastBuildDate>Sat, 10 Oct 2026 02:25:52 GMT</lastBuildDate>
+        <lastBuildDate>Sat, 10 Oct 2026 03:27:11 GMT</lastBuildDate>
         <atom:link href="https://www.data-v.site/rss.xml" rel="self" type="application/rss+xml"/>
         <language><![CDATA[en]]></language>
         <item>
@@ -19,6 +19,14 @@
             <guid isPermaLink="false">https://www.data-v.site/posts/hochi-runs</guid>
             <dc:creator><![CDATA[Valerie Andy]]></dc:creator>
             <pubDate>Fri, 09 Oct 2026 14:00:00 GMT</pubDate>
+        </item>
+        <item>
+            <title><![CDATA[Returning to Ambient Church for Mezame New York]]></title>
+            <description><![CDATA[Behind the scenes at St. Bartholomew’s, from Friday’s setup to Saturday’s performances.]]></description>
+            <link>https://www.data-v.site/posts/mezame</link>
+            <guid isPermaLink="false">https://www.data-v.site/posts/mezame</guid>
+            <dc:creator><![CDATA[Valerie Andy]]></dc:creator>
+            <pubDate>Mon, 28 Sep 2026 12:00:00 GMT</pubDate>
         </item>
         <item>
             <title><![CDATA[Genuary Day 2: Squash & Stretch in GLSL]]></title>
@@ -51,13 +59,6 @@
             <guid isPermaLink="false">https://www.data-v.site/posts/painting-with-math-a-gentle-study-of-raymarching</guid>
             <dc:creator><![CDATA[Valerie Andy]]></dc:creator>
             <pubDate>Tue, 12 Sep 2023 08:00:00 GMT</pubDate>
-        </item>
-        <item>
-            <title><![CDATA[No title]]></title>
-            <link>https://www.data-v.site/posts/LICENSE</link>
-            <guid isPermaLink="false">https://www.data-v.site/posts/LICENSE</guid>
-            <dc:creator><![CDATA[Valerie Andy]]></dc:creator>
-            <pubDate>Invalid Date</pubDate>
         </item>
     </channel>
 </rss>

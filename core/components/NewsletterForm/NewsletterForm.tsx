@@ -206,7 +206,7 @@ const NewsletterForm = (props: Props) => {
               textAlign: 'center',
             }}
           >
-            (You will receive a confirmation email in a few seconds)
+            Check your inbox to confirm your subscription.
           </Text>
         ) : null}
       </NewsletterFormContent>
