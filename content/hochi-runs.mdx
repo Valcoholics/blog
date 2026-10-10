@@ -1,0 +1,169 @@
+---
+title: "Hochi Runs: An archive built for listening"
+subtitle: "An independent label's catalog, artist context, and an experiment in browser-based audio."
+date: '2026-10-09T14:00:00.000Z'
+updated: '2026-10-09T14:00:00.000Z'
+slug: hochi-runs
+type: 'blogPost'
+featured: false
+categories: []
+keywords: ['Hochi Runs', 'creative development', 'music archive', 'browser audio']
+colorFeatured: '#927b8d'
+coverImage: '/static/hochi-runs/visualizer-shared-player.png'
+---
+
+Hochi Runs is an independent record label, collective, and agency working across music, artists, and events. I developed its website to give the label's catalog a home of its own, bringing releases, artwork, and editorial content together beyond the platforms where its music is distributed.
+
+Alongside the archive, I've been experimenting with a browser-based listening interface inspired by projects like Catalog Radio and Dweller. It's an extension of a broader interest of mine in audio programming, interactive web tools, and the possibilities of independent music websites.
+
+**Role:** Creative development and platform architecture  
+**Scope:** Label website, release archive, content integration, and experimental listening interface  
+**Status:** Public website with a radio beta in development
+
+## The archive
+
+The website gives Hochi's releases a consistent place to live, with individual pages for credits, tracklists, and editorial context. Bandcamp remains the destination for purchases and full-release listening, while the website provides a space for exploring the catalog on the label's own terms.
+
+<Fullbleed maxWidth={1200} widthPercent={90}>
+<figure style={{ margin: 0, minWidth: 0 }}>
+  <video width={2880} height={1800} controls playsInline preload="metadata" poster="/static/hochi-runs/archive-browsing-poster.jpg" aria-label="Hochi Runs release archive recording" style={{ display: 'block', width: '100%', height: 'auto' }}>
+    <source src="/static/hochi-runs/archive-browsing.mp4" type="video/mp4" />
+    <a href="/static/hochi-runs/archive-browsing.mp4">Watch the Hochi Runs release archive recording</a>
+  </video>
+  <figcaption style={{ marginTop: '0.75rem', fontSize: '0.85rem', lineHeight: 1.5 }}>Browsing the release archive, visualizer, release details, artists, and events with the shared player. Recorded October 9, 2026.</figcaption>
+</figure>
+</Fullbleed>
+
+<Fullbleed maxWidth={1200} widthPercent={90}>
+<figure style={{ margin: 0, minWidth: 0 }}>
+  <a href="/static/hochi-runs/release-sneaky-link.png" target="_blank" rel="noopener noreferrer" aria-label="View full-size screenshot: Amal’s sneaky link release page with artwork, metadata, credits, tracklist, and the shared player">
+    <img src="/static/hochi-runs/release-sneaky-link.png" alt="Amal’s sneaky link release page with artwork, metadata, credits, tracklist, and the shared player" width={2880} height={1800} decoding="async" loading="lazy" style={{ display: 'block', width: '100%', height: 'auto' }} />
+  </a>
+  <figcaption style={{ marginTop: '0.75rem', fontSize: '0.85rem', lineHeight: 1.5 }}>sneaky link — Amal. Artwork, release metadata, credits, and tracklist, with the shared player along the bottom edge. Captured October 9, 2026.</figcaption>
+</figure>
+</Fullbleed>
+
+## Catalog and content
+
+The archive draws from Bandcamp's public release metadata, collected through a separate importer into a validated JSON snapshot. This avoids relying on live scraping during each visit.
+
+Imported releases are merged with curated records while preserving existing URLs, catalog numbers, and source identities. Editorial content is handled separately, either through bundled data or a connected published feed, allowing artist profiles, descriptions, credits, events, and release visibility to change without disrupting the underlying catalog.
+
+This separation keeps the music source, editorial work, and website presentation independent enough to evolve without maintaining competing versions of the same release.
+
+<ArchitectureDiagram variant="catalog" />
+
+## Listening across the archive
+
+The radio beta began as an opportunity to explore how listening could become part of the website itself.
+
+Rather than a live broadcast or scheduled queue, it uses available Bandcamp previews through a shared player that continues across internal navigation. Visitors can move between the archive, artist profiles, and release pages while listening, with the selected artwork informing a responsive visualizer.
+
+<Fullbleed maxWidth={1200} widthPercent={90}>
+<figure style={{ margin: 0, minWidth: 0 }}>
+  <video width={2880} height={1800} controls playsInline preload="metadata" poster="/static/hochi-runs/visualizer-recording-poster.jpg" aria-label="Hochi Runs visualizer recording: Low Top Vanz (Amal Techno Remix)" style={{ display: 'block', width: '100%', height: 'auto' }}>
+    <source src="/static/hochi-runs/visualizer-recording.mp4" type="video/mp4" />
+    <a href="/static/hochi-runs/visualizer-recording.mp4">Watch the Hochi Runs visualizer recording</a>
+  </video>
+  <figcaption style={{ marginTop: '0.75rem', fontSize: '0.85rem', lineHeight: 1.5 }}>Low Top Vanz (Amal Techno Remix) — Rylo Rodriguez. The moving visual field surrounds the artwork above the shared player. Recorded October 9, 2026.</figcaption>
+</figure>
+</Fullbleed>
+
+### Playback architecture
+
+The player stays mounted in the site's root layout, retaining a single native audio element as pages change.
+
+A same-origin route resolves eligible Bandcamp previews and verifies the selected track before delivering audio, without storing local audio files. When native playback isn't available, visitors can open Bandcamp's official player instead.
+
+<ArchitectureDiagram variant="playback" />
+
+### Visual rendering
+
+The visualizer combines colors sampled from the selected artwork with frequency data from a Web Audio analyser. Bass, mids, and treble influence a WebGL light field, with Artwork, Wordmark, and Both modes offering different ways to experience the composition.
+
+Rendering runs independently of playback and respects reduced-motion preferences. Audio remains available if the graphics fail or the visualizer isn't active.
+
+<ArchitectureDiagram variant="rendering" />
+
+*The recording below shows an earlier iteration of the radio interface, captured October 8, 2026.*
+
+<Fullbleed maxWidth={1200} widthPercent={90}>
+<figure style={{ margin: 0 }}>
+  <video width={3104} height={1964} controls playsInline preload="metadata" poster="/static/hochi-runs/radio-playback-poster.jpg" aria-label="Hochi Runs radio playback" style={{ display: 'block', width: '100%', height: 'auto' }}>
+    <source src="/static/hochi-runs/radio-playback.mp4" type="video/mp4" />
+    <a href="/static/hochi-runs/radio-playback.mp4">Watch Hochi Runs radio playback</a>
+  </video>
+</figure>
+</Fullbleed>
+
+### Artwork and sound
+
+The relationship between artwork and audio gives each release its own visual character. The images below show how the light field changes during playback and across different releases.
+
+<Fullbleed maxWidth={1200} widthPercent={90}>
+<Box css={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '1.25rem', '@media(max-width: 700px)': { gridTemplateColumns: '1fr' } }}>
+<figure style={{ margin: 0, minWidth: 0 }}>
+  <a href="/static/hochi-runs/side-orders-wordmark-0008.png" target="_blank" rel="noopener noreferrer" aria-label="View full-size screenshot: POP OUT [AMAL + MARVEL] in Wordmark view at 0:08 with a subdued orange field behind the Hochi wordmark">
+    <img src="/static/hochi-runs/side-orders-wordmark-0008.png" alt="POP OUT [AMAL + MARVEL] in Wordmark view at 0:08 with a subdued orange field behind the Hochi wordmark" width={2880} height={1800} decoding="async" loading="lazy" style={{ display: 'block', width: '100%', height: 'auto' }} />
+  </a>
+</figure>
+<figure style={{ margin: 0, minWidth: 0 }}>
+  <a href="/static/hochi-runs/side-orders-wordmark-0111.png" target="_blank" rel="noopener noreferrer" aria-label="View full-size screenshot: POP OUT [AMAL + MARVEL] in Wordmark view at 1:11 with a bright orange and gold field behind the Hochi wordmark">
+    <img src="/static/hochi-runs/side-orders-wordmark-0111.png" alt="POP OUT [AMAL + MARVEL] in Wordmark view at 1:11 with a bright orange and gold field behind the Hochi wordmark" width={2880} height={1800} decoding="async" loading="lazy" style={{ display: 'block', width: '100%', height: 'auto' }} />
+  </a>
+</figure>
+</Box>
+</Fullbleed>
+
+*Side Orders v1 — Hochi Runs. POP OUT [AMAL + MARVEL] in Wordmark view at 0:08 and 1:11, showing the orange and gold field changing during playback. Captured October 9, 2026.*
+
+<Fullbleed maxWidth={1200} widthPercent={90}>
+<Box css={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '1.25rem', '@media(max-width: 700px)': { gridTemplateColumns: '1fr' } }}>
+<figure style={{ margin: 0, minWidth: 0 }}>
+  <a href="/static/hochi-runs/palette-stuck-in-sp-0100.png" target="_blank" rel="noopener noreferrer" aria-label="View full-size screenshot: Stuck in SP playing at 1:00 with yellow and gold light around the green release artwork">
+    <img src="/static/hochi-runs/palette-stuck-in-sp-0100.png" alt="Stuck in SP playing at 1:00 with yellow and gold light around the green release artwork" width={2880} height={1800} decoding="async" loading="lazy" style={{ display: 'block', width: '100%', height: 'auto' }} />
+  </a>
+  <figcaption style={{ marginTop: '0.75rem', fontSize: '0.85rem', lineHeight: 1.5 }}>Stuck in SP — Amal, Rxfx. Yellow and gold light surrounds the green artwork at 1:00.</figcaption>
+</figure>
+<figure style={{ margin: 0, minWidth: 0 }}>
+  <a href="/static/hochi-runs/palette-like-dat-riddim-0019.png" target="_blank" rel="noopener noreferrer" aria-label="View full-size screenshot: like dat riddim playing at 0:19 with blue and cyan light around its artwork">
+    <img src="/static/hochi-runs/palette-like-dat-riddim-0019.png" alt="like dat riddim playing at 0:19 with blue and cyan light around its artwork" width={2880} height={1800} decoding="async" loading="lazy" style={{ display: 'block', width: '100%', height: 'auto' }} />
+  </a>
+  <figcaption style={{ marginTop: '0.75rem', fontSize: '0.85rem', lineHeight: 1.5 }}>like dat riddim — Amal, Kodak Black. Blue and cyan light surrounds the artwork at 0:19.</figcaption>
+</figure>
+<figure style={{ margin: 0, minWidth: 0 }}>
+  <a href="/static/hochi-runs/palette-stadium-0004.png" target="_blank" rel="noopener noreferrer" aria-label="View full-size screenshot: Stadium playing at 0:04 with pink and purple light around its artwork">
+    <img src="/static/hochi-runs/palette-stadium-0004.png" alt="Stadium playing at 0:04 with pink and purple light around its artwork" width={2880} height={1800} decoding="async" loading="lazy" style={{ display: 'block', width: '100%', height: 'auto' }} />
+  </a>
+  <figcaption style={{ marginTop: '0.75rem', fontSize: '0.85rem', lineHeight: 1.5 }}>Stadium — Amal, Dj Nativesun. Pink and purple light surrounds the artwork at 0:04.</figcaption>
+</figure>
+</Box>
+</Fullbleed>
+
+## Learning from open systems
+
+I've always been interested in audio programming, sound design, and interactive tools that can live directly in a browser. [Catalog Radio's open-source repository](https://github.com/catalogworks/catalog-radio-public) gave me an opportunity to explore those interests through an existing project.
+
+I spent time studying its approach to browser-based listening and reconstructing parts of the experience for Hochi, using Bandcamp previews in place of Catalog's original music infrastructure. It became a way to better understand the systems behind an interface I admired, while seeing how they could work in a different context.
+
+What I appreciate most is that the code remains accessible even though Catalog itself has shut down. There's a tendency to treat discontinued platforms as though the work behind them disappears too. But the repository is still there, available for anyone curious enough to open it, learn from it, or take those ideas somewhere else.
+
+Dweller's approach to integrating listening into its own website was another reference. Both projects connect to something I've been interested in for a while: independent spaces where music, design, and technology can exist together without every experience having to begin and end on a streaming platform.
+
+## Continuing the project
+
+The website is a working archive, while the listening interface remains an experiment.
+
+There's room to develop the underlying infrastructure further, including a dedicated archive database and potentially owned audio delivery for formats beyond individual previews, such as recorded sessions or continuous programming.
+
+I'm interested in where these tools can go, especially when they're built around the needs and identities of independent artists and labels. For now, Hochi is a place to explore those ideas through something that people can actually use.
+
+## Design context and credits
+
+The website's visual composition is closely adapted from [Surf Gang Records](https://surfgang.nyc/), originally designed and developed by [taw vision](https://taw.vision/work/surf-gang-records). My work involved adapting that composition to Hochi's catalog, modifying typography, and independently developing the frontend, backend, content infrastructure, and listening interface.
+
+Additional references include [The Lot Radio by Decimal](https://decimalstudios.com/projects/thelotradio) and [Catalog Radio](https://github.com/catalogworks/catalog-radio-public).
+
+Original design credit for the adapted composition belongs to taw vision. This independent implementation is not affiliated with or endorsed by taw vision or Surf Gang Records.
+
+[Hochi Runs](https://hochiruns.com/) · [Radio](https://hochiruns.com/beta/radio)

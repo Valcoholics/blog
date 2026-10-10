@@ -30,7 +30,7 @@ import { globby } from 'globby';
           const route = path === '/index' ? '' : path;
 
           return `<url>
-  <loc>${`https://blog.data-v.site${route}/`}</loc>
+  <loc>${`https://www.data-v.site${route}/`}</loc>
   <changefreq>daily</changefreq>
   <priority>0.7</priority>
 </url>`;

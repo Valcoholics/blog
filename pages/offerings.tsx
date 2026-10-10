@@ -453,7 +453,7 @@ const OfferingsPage = () => {
 
                 {/* CREATIVE CONSULTING */}
                 <AccordionCard
-                  title="Creative Consulting (1-on-1) - FREE CONSULTATIONS JAN 2026"
+                  title="Creative Consulting (1-on-1)"
                   badge="Popular"
                   variant="featured"
                   defaultExpanded={true}
